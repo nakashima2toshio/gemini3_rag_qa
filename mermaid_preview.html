@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mermaid Preview</title>
+</head>
+<body>
+    <h2>System Architecture Diagram</h2>
+    <pre class="mermaid">
+flowchart TB
+    subgraph APP["rag_qa_pair_qdrant.py 統合アプリ"]
+        A1["説明<br/>About"]
+        A2["RAGデータDL"]
+        A3["Q/A生成"]
+        A4["Qdrant登録"]
+        A5["Show Qdrant"]
+        A6["Qdrant検索"]
+    end
+
+    subgraph PIPELINE["処理パイプライン"]
+        P1["データセット<br/>cc_news / livedoor / wikipedia"]
+        P2["チャンク分割<br/>SemanticCoverage<br/>段落優先 / 文分割 / MeCab"]
+        P3["Q/A生成<br/>LLM / Celery<br/>GPT-4o-mini / 並列処理"]
+        P4["Embedding<br/>OpenAI API<br/>text-embedding-3-small<br/>1536次元"]
+        P5["Qdrant登録<br/>Vector DB<br/>コサイン類似度検索"]
+    end
+
+    A1 --> PIPELINE
+    A2 --> PIPELINE
+    A3 --> PIPELINE
+    A4 --> PIPELINE
+    A5 --> PIPELINE
+    A6 --> PIPELINE
+
+    P1 --> P2 --> P3 --> P4 --> P5
+    </pre>
+
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true });
+    </script>
+</body>
+</html>
