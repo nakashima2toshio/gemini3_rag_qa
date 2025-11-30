@@ -106,9 +106,9 @@ def show_qa_generation_page():
                 "Celeryワーカー数",
                 min_value=1,
                 max_value=48,
-                value=24,
+                value=8,  # Gemini APIレート制限対策のためデフォルトを8に設定
                 step=1,
-                help="並列処理するワーカー数",
+                help="並列処理するワーカー数（Gemini推奨: 8）",
             )
         else:
             celery_workers = 1
@@ -214,9 +214,16 @@ def show_qa_generation_page():
         st.write(f"- モデル: {qa_model}")
         st.write(f"- カバレージ分析: {'実行' if analyze_coverage else 'スキップ'}")
 
-    # 実行ボタン
+    # 実行中フラグの初期化
+    if "qa_generation_running" not in st.session_state:
+        st.session_state["qa_generation_running"] = False
+
+    # 実行ボタン（実行中は無効化）
     run_qa_generation = st.button(
-        "🚀 Q/A生成開始", type="primary", use_container_width=True
+        "🚀 Q/A生成開始" if not st.session_state["qa_generation_running"] else "⏳ 処理中...",
+        type="primary",
+        use_container_width=True,
+        disabled=st.session_state["qa_generation_running"]
     )
 
     st.divider()
@@ -239,7 +246,8 @@ def show_qa_generation_page():
             st.session_state["qa_logs"] = st.session_state["qa_logs"][-1000:]
 
     # 処理実行
-    if run_qa_generation:
+    if run_qa_generation and not st.session_state["qa_generation_running"]:
+        st.session_state["qa_generation_running"] = True  # 実行開始
         st.session_state["qa_logs"] = []  # ログクリア
 
         # 入力チェック
@@ -333,6 +341,9 @@ def show_qa_generation_page():
         except Exception as e:
             add_log(f"❌ エラー発生: {str(e)}")
             st.error(f"エラーが発生しました: {str(e)}")
+        finally:
+            # 実行完了 - フラグをリセット
+            st.session_state["qa_generation_running"] = False
 
     # ログ表示
     with log_container:

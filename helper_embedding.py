@@ -193,15 +193,31 @@ class GeminiEmbedding(EmbeddingClient):
               ループ処理でバッチを模擬し、レート制限を考慮。
         """
         all_embeddings: List[List[float]] = []
+        total = len(texts)
+        start_time = time.time()
+
+        # 開始ログ
+        logger.info(f"[Embedding] 開始: {total}件のテキストを処理します")
 
         for i, text in enumerate(texts):
             embedding = self.embed_text(text)
             all_embeddings.append(embedding)
 
+            # 進捗ログ（50件ごと、または最初と最後）
+            if (i + 1) % 50 == 0 or i == 0 or i + 1 == total:
+                elapsed = time.time() - start_time
+                rate = (i + 1) / elapsed if elapsed > 0 else 0
+                remaining = (total - i - 1) / rate if rate > 0 else 0
+                logger.info(f"[Embedding] 進捗: {i + 1}/{total} ({(i + 1) / total * 100:.1f}%) "
+                           f"経過={elapsed:.1f}秒, 残り≈{remaining:.0f}秒")
+
             # レート制限対策（100リクエストごとに待機）
             if (i + 1) % batch_size == 0 and i + 1 < len(texts):
                 logger.debug(f"Processed {i + 1}/{len(texts)} embeddings, sleeping...")
                 time.sleep(1.0)
+
+        elapsed_total = time.time() - start_time
+        logger.info(f"[Embedding] 完了: {total}件, 所要時間={elapsed_total:.1f}秒")
 
         return all_embeddings
 

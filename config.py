@@ -361,7 +361,7 @@ class CeleryConfig:
     ENABLE_UTC: bool = True
     TASK_TIME_LIMIT: int = 300  # 5分
     TASK_SOFT_TIME_LIMIT: int = 240  # 4分
-    WORKER_CONCURRENCY: int = 4
+    WORKER_CONCURRENCY: int = 8  # Gemini APIレート制限対策のためデフォルトを8に設定
     WORKER_PREFETCH_MULTIPLIER: int = 1
 
 

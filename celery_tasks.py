@@ -296,6 +296,13 @@ def generate_qa_unified_async(
     try:
         provider = provider or DEFAULT_LLM_PROVIDER
 
+        # レート制限対策: Gemini API呼び出し前に短い遅延を追加
+        if provider == "gemini":
+            import time
+            import random
+            delay = random.uniform(0.5, 1.5)  # 0.5〜1.5秒のランダム遅延
+            time.sleep(delay)
+
         # Geminiプロバイダー使用時にOpenAIモデル名が渡された場合はデフォルトモデルを使用
         if provider == "gemini" and model and ("gpt" in model.lower() or "o1" in model.lower() or "o3" in model.lower() or "o4" in model.lower()):
             logger.warning(f"[統合タスク] OpenAIモデル '{model}' はGeminiプロバイダーで使用できません。デフォルトモデルを使用します。")
@@ -500,7 +507,12 @@ def submit_parallel_qa_generation(chunks: List[Dict], config: Dict, model: str =
 
 def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
     """
-    並列処理の結果を収集（改良版：Redis直接アクセスで確実な結果取得）
+    並列処理の結果を収集（簡素化版：Redis直接アクセスで確実な結果取得）
+
+    問題: 以前のバージョンは複雑すぎて一部のタスク結果を取得できなかった
+    解決: シンプルな2フェーズ方式に変更
+      - Phase 1: タスク完了を待つ（ポーリング）
+      - Phase 2: Redisから全結果を一括取得
 
     Args:
         tasks: Celeryタスクのリスト
@@ -514,13 +526,20 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
     import json
     from celery.result import AsyncResult
 
-    all_qa_pairs = []
-    failed_chunks = []
     total_tasks = len(tasks)
-    completed_tasks = set()  # 完了済みタスクのインデックス
-    failed_tasks = set()     # 失敗タスクのインデックス
+    logger.info(f"=" * 60)
+    logger.info(f"結果収集開始: {total_tasks}個のタスク (タイムアウト: {timeout}秒)")
+    logger.info(f"=" * 60)
 
-    logger.info(f"結果収集開始: {total_tasks}個のタスク")
+    # タスクIDリストを作成
+    task_ids = [task.id for task in tasks]
+    logger.info(f"タスクID例: {task_ids[0][:20]}... (全{len(task_ids)}個)")
+
+    # 診断用：タスクIDのセットを保持
+    submitted_task_ids = set(task_ids)
+    logger.info(f"[診断] 投入タスクID数: {len(submitted_task_ids)} (重複なし確認)")
+    logger.info(f"[診断] 最初の5個: {task_ids[:5]}")
+    logger.info(f"[診断] 最後の5個: {task_ids[-5:]}")
 
     # Redis接続を確立
     redis_client = redis.Redis(
@@ -530,227 +549,242 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
         decode_responses=True
     )
 
-    # タスクIDをログ出力
-    for i, task in enumerate(tasks):
-        logger.debug(f"タスク {i+1}: ID={task.id}")
+    # 接続テスト
+    try:
+        redis_client.ping()
+        logger.info("✓ Redis接続成功")
+    except Exception as e:
+        logger.error(f"✗ Redis接続失敗: {e}")
+        return []
 
     start_time = time.time()
     last_log_time = start_time
-    stall_check_time = start_time
-    last_completed_count = 0
-    stall_counter = 0
 
-    # シンプルなループで結果を収集
-    while len(completed_tasks) + len(failed_tasks) < total_tasks:
+    # ======================================
+    # Phase 1: タスク完了を待つ
+    # ======================================
+    logger.info("=" * 60)
+    logger.info("Phase 1: タスク完了待機中...")
+    logger.info("=" * 60)
+
+    while True:
         current_time = time.time()
         elapsed = current_time - start_time
 
         # タイムアウトチェック
         if elapsed > timeout:
-            logger.error(f"タイムアウト: {elapsed:.1f}秒経過")
-            logger.info(f"収集済み: {len(completed_tasks)}個, 未収集: {total_tasks - len(completed_tasks) - len(failed_tasks)}個")
+            logger.warning(f"⚠️ Phase 1 タイムアウト: {elapsed:.1f}秒経過")
             break
 
-        # 5秒ごとに進捗表示
+        # Redisで完了タスク数をカウント
+        completed_count = 0
+        pending_count = 0
+        failed_count = 0
+
+        for task_id in task_ids:
+            redis_key = f"celery-task-meta-{task_id}"
+            redis_data = redis_client.get(redis_key)
+
+            if redis_data:
+                try:
+                    task_result = json.loads(redis_data)
+                    status = task_result.get('status', 'UNKNOWN')
+                    if status == 'SUCCESS':
+                        completed_count += 1
+                    elif status == 'FAILURE':
+                        failed_count += 1
+                    else:
+                        pending_count += 1
+                except json.JSONDecodeError:
+                    pending_count += 1
+            else:
+                pending_count += 1
+
+        # 5秒ごとに進捗ログ（UI進捗バー用のフォーマット）
         if current_time - last_log_time >= 5:
-            logger.info(f"進捗: 完了={len(completed_tasks)}/{total_tasks}, "
-                       f"失敗={len(failed_tasks)}, "
-                       f"処理中={total_tasks - len(completed_tasks) - len(failed_tasks)}, "
-                       f"経過時間={elapsed:.1f}秒")
+            # UIの進捗バー用（正規表現 "進捗.*?完了[=:：\s]*(\d+)\s*/\s*(\d+)" にマッチ）
+            logger.info(f"進捗: 完了={completed_count + failed_count}/{total_tasks}")
+            logger.info(f"  [Phase 1] 詳細: 成功={completed_count}, 失敗={failed_count}, "
+                       f"処理中={pending_count}, 経過={elapsed:.1f}秒")
             last_log_time = current_time
 
-        # 30秒ごとに停滞チェック
-        if current_time - stall_check_time >= 30:
-            current_completed = len(completed_tasks)
-            if current_completed == last_completed_count:
-                stall_counter += 1
-                logger.warning(f"⚠️ 処理が停滞している可能性があります（{stall_counter * 30}秒間進捗なし）")
+        # 全タスク完了チェック
+        if completed_count + failed_count >= total_tasks:
+            logger.info(f"✓ Phase 1 完了: 全タスク終了 (完了={completed_count}, 失敗={failed_count})")
+            break
 
-                # 3分間進捗がない場合、状態を強制リフレッシュ
-                if stall_counter >= 6:
-                    logger.warning("📊 タスク状態を強制的に再取得...")
-                    for i, task in enumerate(tasks):
-                        if i not in completed_tasks and i not in failed_tasks:
-                            try:
-                                # AsyncResultで再取得
-                                refreshed_task = AsyncResult(task.id)
-                                if refreshed_task.state in ['SUCCESS', 'FAILURE']:
-                                    logger.info(f"タスク {i+1} の状態: {refreshed_task.state}")
-                            except Exception as e:
-                                logger.debug(f"タスク {i+1} の状態取得エラー: {str(e)}")
-                    stall_counter = 0
+        # 待機
+        time.sleep(1.0)
+
+    phase1_time = time.time() - start_time
+    logger.info(f"Phase 1 所要時間: {phase1_time:.1f}秒")
+
+    # Phase 1終了時の詳細診断
+    logger.info(f"[Phase 1 診断] 最終カウント: SUCCESS={completed_count}, FAILURE={failed_count}, PENDING={pending_count}")
+    if pending_count > 0:
+        # 未完了タスクの詳細を出力
+        logger.warning(f"[Phase 1 診断] {pending_count}個のタスクが未完了状態")
+        pending_task_details = []
+        for task_id in task_ids:
+            redis_key = f"celery-task-meta-{task_id}"
+            redis_data = redis_client.get(redis_key)
+            if not redis_data:
+                pending_task_details.append(f"{task_id[:12]}...(NO_DATA)")
             else:
-                stall_counter = 0
-                last_completed_count = current_completed
-            stall_check_time = current_time
+                try:
+                    task_result = json.loads(redis_data)
+                    status = task_result.get('status', 'UNKNOWN')
+                    if status not in ['SUCCESS', 'FAILURE']:
+                        pending_task_details.append(f"{task_id[:12]}...({status})")
+                except:
+                    pending_task_details.append(f"{task_id[:12]}...(JSON_ERROR)")
 
-        # 各タスクをチェック
-        pending_indices = []
-        for i, task in enumerate(tasks):
-            # 既に処理済みのタスクはスキップ
-            if i in completed_tasks or i in failed_tasks:
+        if pending_task_details:
+            logger.warning(f"[Phase 1 診断] 未完了タスク詳細（最初の10個）: {pending_task_details[:10]}")
+
+    # ======================================
+    # Phase 2: Redisから全結果を一括取得
+    # ======================================
+    logger.info("=" * 60)
+    logger.info("Phase 2: Redisから結果を一括取得中...")
+    logger.info("=" * 60)
+
+    all_qa_pairs = []
+    success_count = 0
+    failed_count = 0
+    error_count = 0
+    failed_chunks = []
+
+    # 診断用：取得成功/失敗したタスクIDを追跡
+    collected_task_ids = set()
+    failed_task_ids = []
+    error_task_ids = []
+
+    for i, task_id in enumerate(task_ids):
+        redis_key = f"celery-task-meta-{task_id}"
+
+        try:
+            redis_data = redis_client.get(redis_key)
+
+            if not redis_data:
+                logger.warning(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... Redisにデータなし")
+                error_count += 1
+                error_task_ids.append(task_id)
                 continue
 
             try:
-                # まずRedisから直接状態を確認（最も確実な方法）
-                redis_key = f"celery-task-meta-{task.id}"
-                redis_data = redis_client.get(redis_key)
+                task_result = json.loads(redis_data)
+            except json.JSONDecodeError as e:
+                logger.warning(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... JSONデコードエラー: {str(e)[:50]}")
+                error_count += 1
+                continue
 
-                result = None
-                redis_state = None
+            status = task_result.get('status', 'UNKNOWN')
 
-                if redis_data:
-                    try:
-                        redis_result = json.loads(redis_data)
-                        redis_state = redis_result.get('status')
+            if status == 'SUCCESS':
+                result = task_result.get('result')
 
-                        # Redisで完了している場合は結果を直接取得
-                        if redis_state == 'SUCCESS':
-                            result = redis_result.get('result')
-                            if result and isinstance(result, dict):
-                                if result.get('success'):
-                                    # Redis直接取得成功
-                                    logger.debug(f"タスク {i+1} Redis直接取得成功")
-                                else:
-                                    # タスクは完了したが、結果がsuccess=False（エラー）
-                                    logger.debug(f"タスク {i+1} Redis直接取得（失敗結果）")
-                        elif redis_state == 'FAILURE':
-                            # Celeryタスク自体が失敗
-                            failed_tasks.add(i)
-                            logger.error(f"✗ タスク {i+1}/{total_tasks} 失敗（Redis FAILURE状態）")
-                            continue
-                    except json.JSONDecodeError:
-                        logger.warning(f"タスク {i+1} Redis JSONデコードエラー")
+                if result is None:
+                    logger.warning(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... result=None")
+                    error_count += 1
+                    continue
 
-                # Redisから結果を取得できた場合は処理
-                if result and isinstance(result, dict):
-                    if result.get('success'):
-                        # 成功タスク
-                        qa_pairs = result.get('qa_pairs', [])
-                        all_qa_pairs.extend(qa_pairs)
-                        completed_tasks.add(i)
+                if not isinstance(result, dict):
+                    logger.warning(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... resultが辞書でない: {type(result)}")
+                    error_count += 1
+                    continue
 
-                        # チャンク情報をログ
-                        if 'chunk_id' in result:
-                            logger.info(f"✓ タスク {i+1}/{total_tasks} 完了（Redis直接）: チャンク {result['chunk_id']} - {len(qa_pairs)}個のQ/A")
-                        elif 'chunk_ids' in result:
-                            logger.info(f"✓ タスク {i+1}/{total_tasks} 完了（Redis直接）: バッチ {len(result['chunk_ids'])}チャンク - {len(qa_pairs)}個のQ/A")
-                    else:
-                        # 失敗タスク（success=False）- Redisから直接検出
-                        failed_tasks.add(i)
-                        error_msg = result.get('error', 'Unknown error')
-                        logger.error(f"✗ タスク {i+1}/{total_tasks} 失敗（Redis直接）: {error_msg[:200]}")
+                if result.get('success'):
+                    # 成功：Q/Aペアを取得
+                    qa_pairs = result.get('qa_pairs', [])
+                    all_qa_pairs.extend(qa_pairs)
+                    success_count += 1
+                    collected_task_ids.add(task_id)  # 診断用
 
-                        if 'chunk_id' in result:
-                            failed_chunks.append(result['chunk_id'])
-                        elif 'chunk_ids' in result:
-                            failed_chunks.extend(result['chunk_ids'])
+                    # 100タスクごとに進捗ログ
+                    if (i + 1) % 100 == 0 or i == total_tasks - 1:
+                        logger.info(f"[Phase 2] {i+1}/{total_tasks} 処理済み "
+                                   f"(成功={success_count}, 失敗={failed_count}, エラー={error_count}, "
+                                   f"Q/A合計={len(all_qa_pairs)})")
                 else:
-                    # Redisから結果を取得できなかった場合は従来の方法を試す
-                    # (redis_dataがない、redis_stateがPENDING/STARTED、resultがNone等)
-                    task_state = task.state
+                    # タスク自体は成功だが、Q/A生成が失敗
+                    failed_count += 1
+                    failed_task_ids.append(task_id)  # 診断用
+                    error_msg = result.get('error', 'Unknown error')
+                    logger.debug(f"[{i+1}/{total_tasks}] Q/A生成失敗: {error_msg[:100]}")
 
-                    # デバッグ: 最後のタスクの状態を詳細ログ
-                    if i == total_tasks - 1:
-                        logger.debug(f"🔍 最後のタスク[{i}] Redis状態={redis_state}, Celery状態={task_state}, id={task.id[:8]}...")
+                    if 'chunk_id' in result:
+                        failed_chunks.append(result['chunk_id'])
+                    elif 'chunk_ids' in result:
+                        failed_chunks.extend(result.get('chunk_ids', []))
 
-                    # Celery経由で結果を取得
-                    if task_state == 'SUCCESS' or task.ready():
-                        # 結果を取得（短いタイムアウト）
-                        try:
-                            result = task.get(timeout=1, propagate=False)
-                        except Exception:
-                            pass
+            elif status == 'FAILURE':
+                failed_count += 1
+                traceback_info = task_result.get('traceback', 'no traceback')
+                logger.debug(f"[{i+1}/{total_tasks}] Celeryタスク失敗: {str(traceback_info)[:100]}")
 
-                        if result and isinstance(result, dict) and result.get('success'):
-                            qa_pairs = result.get('qa_pairs', [])
-                            all_qa_pairs.extend(qa_pairs)
-                            completed_tasks.add(i)
+            else:
+                # PENDING, STARTED, etc.
+                logger.warning(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... 状態={status} (未完了)")
+                error_count += 1
 
-                            # チャンク情報をログ
-                            if 'chunk_id' in result:
-                                logger.info(f"✓ タスク {i+1}/{total_tasks} 完了: チャンク {result['chunk_id']} - {len(qa_pairs)}個のQ/A")
-                            elif 'chunk_ids' in result:
-                                logger.info(f"✓ タスク {i+1}/{total_tasks} 完了: バッチ {len(result['chunk_ids'])}チャンク - {len(qa_pairs)}個のQ/A")
-                        elif result is not None:
-                            failed_tasks.add(i)
-                            error_msg = result.get('error', 'Unknown error') if result and isinstance(result, dict) else str(result)
-                            logger.error(f"✗ タスク {i+1}/{total_tasks} 失敗: {error_msg[:200]}")
+        except Exception as e:
+            logger.error(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... 例外: {str(e)[:100]}")
+            error_count += 1
 
-                            if result and isinstance(result, dict):
-                                if 'chunk_id' in result:
-                                    failed_chunks.append(result['chunk_id'])
-                                elif 'chunk_ids' in result:
-                                    failed_chunks.extend(result['chunk_ids'])
-
-                    elif task_state == 'FAILURE':
-                        failed_tasks.add(i)
-                        logger.error(f"✗ タスク {i+1}/{total_tasks} 失敗（状態: FAILURE）")
-
-                    elif task_state == 'PENDING':
-                        pending_indices.append(i)
-
-            except TimeoutError:
-                # タイムアウトは正常（まだ処理中）
-                pass
-            except Exception as e:
-                # その他のエラーは1回だけログ
-                if i not in failed_tasks:
-                    logger.debug(f"タスク {i+1} チェック中にエラー（処理継続）: {str(e)[:100]}")
-
-        # デバッグ: ペンディング状態のタスクが多い場合警告
-        if len(pending_indices) > 10 and current_time - start_time > 60:
-            logger.debug(f"ペンディング状態のタスク数: {len(pending_indices)}")
-
-        # 短い待機（処理済みタスクが多い場合は待機時間を長くする）
-        completion_ratio = len(completed_tasks) / total_tasks if total_tasks > 0 else 0
-        if completion_ratio > 0.9:
-            time.sleep(1.0)  # 90%以上完了したら待機時間を長く
-        else:
-            time.sleep(0.5)
-
-    # 最終的な未完了タスクの処理（より積極的に取得）
-    logger.info(f"ループ終了後の最終確認: 未処理タスク {total_tasks - len(completed_tasks) - len(failed_tasks)}個")
-    for i, task in enumerate(tasks):
-        if i not in completed_tasks and i not in failed_tasks:
-            try:
-                # AsyncResultで強制的に最新状態を取得
-                from celery.result import AsyncResult
-                refreshed = AsyncResult(task.id)
-                final_state = refreshed.state
-                logger.info(f"タスク {i+1} 最終状態: {final_state}")
-
-                # 状態に関わらず結果取得を試みる
-                if final_state in ['SUCCESS', 'FAILURE'] or refreshed.ready():
-                    result = refreshed.get(timeout=3, propagate=False)
-                    if result and isinstance(result, dict) and result.get('success'):
-                        qa_pairs = result.get('qa_pairs', [])
-                        all_qa_pairs.extend(qa_pairs)
-                        completed_tasks.add(i)
-                        logger.info(f"✓ タスク {i+1}/{total_tasks} 最終収集で完了: {len(qa_pairs)}個のQ/A")
-                    else:
-                        failed_tasks.add(i)
-                        logger.warning(f"タスク {i+1}/{total_tasks} 最終収集で失敗として処理")
-                else:
-                    logger.warning(f"タスク {i+1}/{total_tasks} 最終状態: {final_state} - 未完了")
-            except Exception as e:
-                logger.warning(f"タスク {i+1}/{total_tasks} 最終収集エラー: {str(e)[:100]}")
-
+    # ======================================
     # 結果サマリー
-    elapsed_total = time.time() - start_time
-    logger.info(f"""
-    =====================================
-    結果収集完了:
-    - 成功: {len(completed_tasks)}/{total_tasks}タスク
-    - 失敗: {len(failed_tasks)}タスク
-    - 未完了: {total_tasks - len(completed_tasks) - len(failed_tasks)}タスク
-    - 生成Q/Aペア: {len(all_qa_pairs)}個
-    - 所要時間: {elapsed_total:.1f}秒
-    =====================================
-    """)
+    # ======================================
+    total_time = time.time() - start_time
+    logger.info("=" * 60)
+    logger.info("結果収集完了 - サマリー")
+    logger.info("=" * 60)
+    logger.info(f"  総タスク数     : {total_tasks}")
+    logger.info(f"  成功           : {success_count} ({100*success_count/total_tasks:.1f}%)")
+    logger.info(f"  失敗           : {failed_count}")
+    logger.info(f"  エラー         : {error_count}")
+    logger.info(f"  生成Q/Aペア    : {len(all_qa_pairs)}個")
+    logger.info(f"  所要時間       : {total_time:.1f}秒")
+    logger.info("=" * 60)
+
+    # ======================================
+    # 診断ログ：取得できなかったタスクの詳細
+    # ======================================
+    missing_task_ids = submitted_task_ids - collected_task_ids
+    if missing_task_ids:
+        logger.warning(f"[診断] 取得できなかったタスク数: {len(missing_task_ids)}")
+        logger.warning(f"[診断] 取得できなかったタスクID（最初の10個）:")
+        for tid in list(missing_task_ids)[:10]:
+            # Redisの状態を再確認
+            redis_key = f"celery-task-meta-{tid}"
+            redis_data = redis_client.get(redis_key)
+            if redis_data:
+                try:
+                    task_result = json.loads(redis_data)
+                    status = task_result.get('status', 'UNKNOWN')
+                    result = task_result.get('result', {})
+                    success = result.get('success', 'N/A') if isinstance(result, dict) else 'N/A'
+                    logger.warning(f"  - {tid[:20]}... status={status}, success={success}")
+                except:
+                    logger.warning(f"  - {tid[:20]}... (JSONデコード失敗)")
+            else:
+                logger.warning(f"  - {tid[:20]}... (Redisにデータなし)")
+    else:
+        logger.info(f"[診断] ✓ 全タスク取得成功 ({len(collected_task_ids)}/{total_tasks})")
+
+    if failed_task_ids:
+        logger.warning(f"[診断] Q/A生成失敗タスク数: {len(failed_task_ids)}")
+        logger.warning(f"[診断] 失敗タスクID（最初の5個）: {failed_task_ids[:5]}")
+
+    if error_task_ids:
+        logger.warning(f"[診断] エラータスク数: {len(error_task_ids)}")
+        logger.warning(f"[診断] エラータスクID（最初の5個）: {error_task_ids[:5]}")
 
     if failed_chunks:
-        logger.warning(f"失敗したチャンク（最初の5個）: {failed_chunks[:5]}")
+        logger.warning(f"失敗チャンク（最初の5個）: {failed_chunks[:5]}")
+
+    if success_count < total_tasks * 0.9:
+        logger.warning(f"⚠️ 成功率が90%未満です: {100*success_count/total_tasks:.1f}%")
 
     return all_qa_pairs
 

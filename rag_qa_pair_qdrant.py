@@ -11,7 +11,7 @@ streamlit run rag_qa_pair_qdrant.py --server.port=8500
 
 # 事前準備（必要な場合）
 1. Qdrantサーバー起動: docker-compose -f docker-compose/docker-compose.yml up -d
-2. Celeryワーカー起動: redis-cli FLUSHDB && ./start_celery.sh restart -w 24
+2. Celeryワーカー起動: redis-cli FLUSHDB && ./start_celery.sh restart -w 8
 3. Flower監視（任意）: celery -A celery_config flower --port=5555
 
 ================================================================================
@@ -92,11 +92,11 @@ def main():
     """メインアプリケーション - 画面選択"""
 
     # ページ設定
-    st.set_page_config(page_title="RAGツール", page_icon="🤖", layout="wide")
+    st.set_page_config(page_title="Gemini3-RAGツール", page_icon="🤖", layout="wide")
 
     # サイドバー：画面選択
     with st.sidebar:
-        st.title("🤖 RAGツール")
+        st.title("🤖 Gemini3-RAGツール")
         st.divider()
 
         # メニュー見出し

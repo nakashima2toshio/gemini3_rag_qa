@@ -1,0 +1,14 @@
+{
+  "dataset_type": "wikipedia_ja",
+  "dataset_name": "Wikipedia日本語版",
+  "generated_at": "20251130_202335",
+  "total_qa_pairs": 262,
+  "coverage_rate": 1.0,
+  "covered_chunks": 66,
+  "total_chunks": 66,
+  "files": {
+    "qa_json": "qa_output/a02/qa_pairs_wikipedia_ja_20251130_202335.json",
+    "qa_csv": "qa_output/a02/qa_pairs_wikipedia_ja_20251130_202335.csv",
+    "coverage": "qa_output/a02/coverage_wikipedia_ja_20251130_202335.json"
+  }
+}

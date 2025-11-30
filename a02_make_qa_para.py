@@ -39,15 +39,15 @@ python test_celery.py
 ＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝＝
 2. 少数でテスト実行（進捗表示付き）
 # 1. Celeryワーカーを再起動
-  redis-cli FLUSHDB && ./start_celery.sh restart -w 24
+  redis-cli FLUSHDB && ./start_celery.sh restart -w 8
 
 # 2. デバッグモードでテスト実行（1チャンクのみ）
-python a02_make_qa_para.py --dataset cc_news --use-celery --celery-workers 24 --batch-chunks 1 --max-docs 1 --model gemini-2.0-flash
+python a02_make_qa_para.py --dataset cc_news --use-celery --celery-workers 8 --batch-chunks 1 --max-docs 1 --model gemini-2.0-flash
 
 python a02_make_qa_para.py \
   --dataset cc_news \
   --use-celery \
-  --celery-workers 24 \
+  --celery-workers 8 \
   --batch-chunks 3 \
   --merge-chunks \
   --min-tokens 150 \
@@ -60,7 +60,7 @@ python a02_make_qa_para.py \
 python a02_make_qa_para.py \
   --input-file qa_output/qa_pairs_upload_20251122_182355.csv\
   --use-celery \
-  --celery-workers 24 \
+  --celery-workers 8 \
   --batch-chunks 3 \
   --max-docs 10 \
   --merge-chunks \
@@ -71,12 +71,12 @@ python a02_make_qa_para.py \
   --analyze-coverage
 
 ーーーー
-推奨コマンド
+推奨コマンド（Gemini APIレート制限対策済み）
 
 python a02_make_qa_para.py \
   --dataset cc_news \
   --use-celery \
-  --celery-workers 24 \
+  --celery-workers 8 \
   --batch-chunks 3 \
   --merge-chunks \
   --min-tokens 150 \
@@ -107,8 +107,8 @@ redis-cli INFO clients
 # キューの状態確認
 redis-cli LLEN celery
 
-# ワーカーの再起動（並列度を下げる）
-./start_celery.sh restart -w 24
+# ワーカーの再起動（Gemini推奨並列度）
+./start_celery.sh restart -w 8
 
 
 ===================================
@@ -1641,14 +1641,20 @@ def analyze_coverage(chunks: List[Dict], qa_pairs: List[Dict], dataset_type: str
     analyzer = SemanticCoverage()
 
     # 埋め込み生成（バッチAPI最適化版）
-    logger.info("埋め込みベクトル生成中...")
+    logger.info("=" * 60)
+    logger.info("カバレージ分析: 埋め込みベクトル生成開始")
+    logger.info("=" * 60)
 
     # チャンクの埋め込み生成（既存メソッド使用）
+    logger.info(f"[Step 1/3] チャンク埋め込み生成: {len(chunks)}件")
     doc_embeddings = analyzer.generate_embeddings(chunks)
+    logger.info(f"[Step 1/3] チャンク埋め込み完了: {len(doc_embeddings)}件")
 
     # Q&Aペアの埋め込み生成（バッチAPI使用で高速化）
     qa_texts = [f"{qa['question']} {qa['answer']}" for qa in qa_pairs]
+    logger.info(f"[Step 2/3] Q/Aペア埋め込み生成: {len(qa_texts)}件")
     qa_embeddings = analyzer.generate_embeddings_batch(qa_texts, batch_size=2048)
+    logger.info(f"[Step 2/3] Q/Aペア埋め込み完了: {len(qa_embeddings)}件")
 
     if len(qa_embeddings) == 0:
         return {
@@ -1926,8 +1932,8 @@ def main():
     parser.add_argument(
         "--celery-workers",
         type=int,
-        default=4,
-        help="Celeryワーカー数（デフォルト: 4）"
+        default=8,
+        help="Celeryワーカー数（デフォルト: 8, Gemini APIレート制限対策）"
     )
     parser.add_argument(
         "--coverage-threshold",
