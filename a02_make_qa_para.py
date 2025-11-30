@@ -504,7 +504,7 @@ def create_semantic_chunks(text: str, lang: str = "ja", max_tokens: int = 200, c
     # SemanticCoverageを使用してセマンティック分割を実行
     from helper_rag_qa import SemanticCoverage
 
-    semantic_analyzer = SemanticCoverage(embedding_model="text-embedding-3-small")
+    semantic_analyzer = SemanticCoverage(embedding_model="gemini-embedding-001")
 
     # 段落優先のセマンティック分割を実行
     # prefer_paragraphs=True: 段落境界を最優先
@@ -888,8 +888,8 @@ def determine_qa_count(chunk: Dict, config: Dict) -> int:
         Q/Aペア数
     """
     base_count = config["qa_per_chunk"]
-    tokenizer = tiktoken.get_encoding("cl100k_base")
-    token_count = len(tokenizer.encode(chunk['text']))
+    client_for_token_count = create_llm_client(provider="gemini", default_model=model) # modelはLLM生成モデル
+    token_count = client_for_token_count.count_tokens(chunk['text'], model=model)
 
     # チャンク位置を考慮（文書後半の補正）
     chunk_position = chunk.get('chunk_idx', 0)

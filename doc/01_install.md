@@ -12,11 +12,10 @@
   - [2.1 Pythonインストール(3.10+)](#21-pythonインストール310)
   - [2.2 仮想環境の作成](#22-仮想環境の作成)
   - [2.3 依存パッケージのインストール](#23-依存パッケージのインストール)
-  - [2.4 Celery関連パッケージのインストール](#24-celery関連パッケージのインストール)
-  - [2.5 MeCabのインストール(日本語処理用)](#25-mecabのインストール日本語処理用)
+  - [2.4 MeCabのインストール(日本語処理用)](#24-mecabのインストール日本語処理用)
 - [3. 環境変数設定](#3-環境変数設定)
   - [3.1 .envファイルの作成](#31-envファイルの作成)
-  - [3.2 OpenAI API Keyの取得・設定](#32-openai-api-keyの取得設定)
+  - [3.2 Gemini API Keyの取得・設定](#32-gemini-api-keyの取得設定)
   - [3.3 設定項目一覧](#33-設定項目一覧)
   - [3.4 設定確認](#34-設定確認)
 - [4. Dockerサービス起動](#4-dockerサービス起動)
@@ -83,7 +82,7 @@
          |                       |                        |
          v                       v                        v
 +-----------------+    +-----------------+    +-------------------+
-|   OpenAI API    |    |     Qdrant      |    |  Celery Workers   |
+|   Gemini API    |    |     Qdrant      |    |  Celery Workers   |
 |  (クラウド)      |    |   Port: 6333    |    |  (並列処理)        |
 |                 |    |   (Docker)      |    |                   |
 | - Q&A生成       |    |                 |    | - Q&A生成タスク    |
@@ -137,7 +136,7 @@ sudo apt install python3.11 python3.11-venv python3-pip
 
 #### Windows
 
-Python公式サイト(https://www.python.org/downloads/)からインストーラをダウンロードしてインストール。
+Python公式サイト(<https://www.python.org/downloads/)からインストーラをダウンロードしてインストール。>
 
 ### 2.2 仮想環境の作成
 
@@ -145,10 +144,10 @@ Python公式サイト(https://www.python.org/downloads/)からインストーラ
 
 ```bash
 # プロジェクトディレクトリに移動
-cd /path/to/openai_rag_qa_jp
+cd /path/to/gemini_rag_qa
 
 # 仮想環境を作成
-python3 -m venv venv
+python3 -m venv .venv
 
 # 仮想環境を有効化
 # macOS/Linux
@@ -159,7 +158,7 @@ source venv/bin/activate
 
 # 有効化確認(プロンプトに(venv)が表示される)
 (venv) $ which python
-/path/to/openai_rag_qa_jp/venv/bin/python
+/path/to/gemini_rag_qa/venv/bin/python
 ```
 
 #### conda(代替)
@@ -178,42 +177,29 @@ conda activate rag_qa
 # 仮想環境が有効化されていることを確認
 (venv) $ pip install --upgrade pip
 
-# requirements.txtからインストール
+# requirements.txtからインストール (Celery, Gemini, Qdrant等)
 (venv) $ pip install -r requirements.txt
+
+# requirements.txtに含まれていないパッケージをインストール
+(venv) $ pip install streamlit mecab-python3
 ```
 
 **主要パッケージ:**
 
 | パッケージ | バージョン | 用途 |
 |-----------|-----------|------|
-| openai | 2.6.1 | OpenAI API クライアント |
+| google-generativeai | 0.8.0 | Gemini API クライアント |
 | streamlit | 1.48.1 | Web UI フレームワーク |
-| qdrant-client | 1.15.1 | Qdrant クライアント |
-| redis | 6.2.0 | Redis クライアント |
-| pandas | 2.3.1 | データ処理 |
-| tiktoken | 0.11.0 | トークンカウント |
+| qdrant-client | 1.16.1 | Qdrant クライアント |
+| redis | 7.1.0 | Redis クライアント |
+| pandas | 2.3.3 | データ処理 |
+| tiktoken | 0.12.0 | トークンカウント |
 | mecab-python3 | 1.0.10 | 形態素解析 |
+| celery | 5.5.3 | タスクキュー・並列処理 |
+| kombu | 5.5.4 | メッセージング |
+| flower | 2.0.1 | Celery監視UI |
 
-### 2.4 Celery関連パッケージのインストール
-
-**重要**: celery と kombu は requirements.txt に含まれていないため、別途インストールが必要です。
-
-```bash
-# Celery と関連パッケージをインストール
-(venv) $ pip install celery[redis] kombu flower
-
-# インストール確認
-(venv) $ celery --version
-# celery 5.x.x
-```
-
-| パッケージ | 用途 |
-|-----------|------|
-| celery | タスクキュー・並列処理 |
-| kombu | メッセージング(Celeryの依存) |
-| flower | Celery監視UI(オプション) |
-
-### 2.5 MeCabのインストール(日本語処理用)
+### 2.4 MeCabのインストール(日本語処理用)
 
 mecab-python3 はPythonバインディングのみのため、MeCab本体と辞書のインストールが必要です。
 
@@ -257,15 +243,15 @@ print(tagger.parse("日本語の形態素解析"))
 touch .env
 ```
 
-### 3.2 OpenAI API Keyの取得・設定
+### 3.2 Gemini API Keyの取得・設定
 
-1. OpenAI Platform(https://platform.openai.com/)にアクセス
+1. Google AI Studio(<https://aistudio.google.com/)にアクセス>
 2. API Keys ページで新しいキーを作成
 3. .env ファイルに記載
 
 ```bash
 # .env ファイルの内容
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GEMINI_API_KEY=AIzaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 ```
 
 ### 3.3 設定項目一覧
@@ -274,7 +260,7 @@ OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 ```bash
 # === 必須 ===
-OPENAI_API_KEY=sk-xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+GEMINI_API_KEY=AIzaxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
 
 # === オプション ===
 # Qdrant URL(デフォルト: http://localhost:6333)
@@ -291,7 +277,7 @@ LOG_LEVEL=INFO
 
 ```bash
 # 環境変数が読み込まれることを確認
-python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('OPENAI_API_KEY:', 'Set' if os.getenv('OPENAI_API_KEY') else 'Not Set')"
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('GEMINI_API_KEY:', 'Set' if os.getenv('GEMINI_API_KEY') else 'Not Set')"
 ```
 
 ---
@@ -302,7 +288,7 @@ python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('OPEN
 
 #### macOS
 
-Docker Desktop for Mac(https://www.docker.com/products/docker-desktop/)をインストール。
+Docker Desktop for Mac(<https://www.docker.com/products/docker-desktop/)をインストール。>
 
 #### Ubuntu/Debian
 
@@ -355,7 +341,7 @@ curl http://localhost:6333/health
 curl http://localhost:6333/collections
 ```
 
-**ブラウザでも確認可能:** http://localhost:6333/dashboard
+**ブラウザでも確認可能:** <http://localhost:6333/dashboard>
 
 #### Redis
 
@@ -395,7 +381,7 @@ docker compose up -d
 
 ### 5.1 Celery概要(なぜ必要か)
 
-Q&A生成処理では、OpenAI APIを大量に呼び出します。同期処理では:
+Q&A生成処理では、Gemini APIを大量に呼び出します。同期処理では:
 
 - 1000チャンク x 3秒/チャンク = 50分
 
@@ -499,9 +485,10 @@ Flowerを使用すると、Celeryタスクの状態をWebブラウザで監視�
 celery -A celery_config flower --port=5555
 ```
 
-**ブラウザでアクセス:** http://localhost:5555
+**ブラウザでアクセス:** <http://localhost:5555>
 
 Flower画面で確認できる情報:
+
 - アクティブなワーカー一覧
 - タスクの実行状況
 - 成功/失敗の統計
@@ -561,7 +548,7 @@ mkdir -p datasets OUTPUT qa_output logs
 
 ### 6.3 ブラウザでのアクセス確認
 
-1. ブラウザで http://localhost:8500 を開く
+1. ブラウザで <http://localhost:8500> を開く
 2. サイドバーで「説明」画面を選択
 3. データフロー図が表示されれば正常起動
 
@@ -592,7 +579,7 @@ echo "=== Celery Workers ==="
 
 # === 5. 環境変数 ===
 echo "=== Environment ==="
-python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('OPENAI_API_KEY:', 'Set' if os.getenv('OPENAI_API_KEY') else 'Not Set')"
+python -c "from dotenv import load_dotenv; import os; load_dotenv(); print('GEMINI_API_KEY:', 'Set' if os.getenv('GEMINI_API_KEY') else 'Not Set')"
 ```
 
 ### 7.2 正常起動時の状態
@@ -637,6 +624,7 @@ streamlit run rag_qa_pair_qdrant.py --server.port=8500
 **エラー:** Connection refused: localhost:6333
 
 **対処:**
+
 ```bash
 # Dockerサービス確認
 docker compose -f docker-compose/docker-compose.yml ps
@@ -653,6 +641,7 @@ docker compose -f docker-compose/docker-compose.yml logs qdrant
 **エラー:** Error connecting to Redis
 
 **対処:**
+
 ```bash
 # Redisコンテナ確認
 docker compose -f docker-compose/docker-compose.yml ps redis
@@ -666,29 +655,31 @@ brew services start redis
 **エラー:** No module named 'celery_tasks'
 
 **対処:**
+
 ```bash
 # プロジェクトルートにいることを確認
 pwd
-# /path/to/openai_rag_qa_jp
+# /path/to/gemini_rag_qa
 
 # 仮想環境が有効化されていることを確認
 which python
-# /path/to/openai_rag_qa_jp/venv/bin/python
+# /path/to/gemini_rag_qa/venv/bin/python
 
 # celeryパッケージがインストールされていることを確認
 pip show celery
 ```
 
-#### OpenAI API エラー
+#### Gemini API エラー
 
 **エラー:** AuthenticationError: Incorrect API key
 
 **対処:**
+
 ```bash
 # .envファイルを確認
-cat .env | grep OPENAI_API_KEY
+cat .env | grep GEMINI_API_KEY
 
-# APIキーのフォーマット確認(sk-で始まる)
+# APIキーのフォーマット確認(AIzaで始まる)
 # 空白や改行が含まれていないか確認
 ```
 
@@ -697,6 +688,7 @@ cat .env | grep OPENAI_API_KEY
 **エラー:** MeCab: Failed to initialize
 
 **対処:**
+
 ```bash
 # macOS
 brew install mecab mecab-ipadic
@@ -757,7 +749,7 @@ source venv/bin/activate  # macOS/Linux
 
 # パッケージインストール
 pip install -r requirements.txt
-pip install celery[redis] kombu flower
+pip install streamlit mecab-python3
 ```
 
 #### Docker操作
@@ -819,15 +811,15 @@ python a02_make_qa_para.py --dataset cc_news --use-celery --celery-workers 24
 
 | 変数名 | 必須 | デフォルト | 説明 |
 |-------|------|-----------|------|
-| OPENAI_API_KEY | Yes | - | OpenAI API キー |
-| QDRANT_URL | No | http://localhost:6333 | Qdrant URL |
+| GEMINI_API_KEY | Yes | - | Gemini API キー |
+| QDRANT_URL | No | <http://localhost:6333> | Qdrant URL |
 | REDIS_URL | No | redis://localhost:6379/0 | Redis URL |
 | LOG_LEVEL | No | INFO | ログレベル |
 
 ### D. ファイル構成
 
 ```
-openai_rag_qa_jp/
+gemini_rag_qa/
 ├── .env                      # 環境変数(作成必要)
 ├── requirements.txt          # Python依存パッケージ
 ├── rag_qa_pair_qdrant.py     # 統合アプリ

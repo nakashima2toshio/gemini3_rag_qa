@@ -163,7 +163,7 @@ def show_qdrant_search_page():
 
             # コレクションに対応した埋め込み設定を取得
             collection_config = COLLECTION_EMBEDDINGS_SEARCH.get(
-                collection, {"model": "text-embedding-3-small", "dims": 1536}
+                collection, {"model": "gemini-embedding-001", "dims": 3072}
             )
             embedding_model = collection_config["model"]
             embedding_dims = collection_config.get("dims")

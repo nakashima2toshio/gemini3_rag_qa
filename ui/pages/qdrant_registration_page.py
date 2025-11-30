@@ -353,10 +353,9 @@ def show_qdrant_registration_page():
                 with st.spinner("🔢 埋め込み生成中..."):
                     add_log("🔢 埋め込み生成開始")
                     texts = build_inputs_for_embedding(df, include_answer)
-                    vectors = embed_texts_for_qdrant(
-                        texts, model="text-embedding-3-small"
-                    )
-                    add_log(f"✅ {len(vectors)} 件の埋め込みを生成しました")
+                                vectors = embed_texts_for_qdrant(
+                                    texts, model="gemini-embedding-001"
+                                )                    add_log(f"✅ {len(vectors)} 件の埋め込みを生成しました")
 
                 # ステップ4: ポイント構築
                 with st.spinner("📦 ポイント構築中..."):

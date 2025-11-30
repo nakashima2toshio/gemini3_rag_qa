@@ -47,13 +47,13 @@ QDRANT_CONFIG = {
 
 # コレクション固有の埋め込み設定
 COLLECTION_EMBEDDINGS_SEARCH = {
-    "qa_corpus": {"model": "text-embedding-3-small", "dims": 1536},
-    "qa_cc_news_a02_llm": {"model": "text-embedding-3-small", "dims": 1536},
-    "qa_cc_news_a03_rule": {"model": "text-embedding-3-small", "dims": 1536},
-    "qa_cc_news_a10_hybrid": {"model": "text-embedding-3-small", "dims": 1536},
-    "qa_livedoor_a02_20_llm": {"model": "text-embedding-3-small", "dims": 1536},
-    "qa_livedoor_a03_rule": {"model": "text-embedding-3-small", "dims": 1536},
-    "qa_livedoor_a10_hybrid": {"model": "text-embedding-3-small", "dims": 1536},
+    "qa_corpus": {"model": "gemini-embedding-001", "dims": 3072},
+    "qa_cc_news_a02_llm": {"model": "gemini-embedding-001", "dims": 3072},
+    "qa_cc_news_a03_rule": {"model": "gemini-embedding-001", "dims": 3072},
+    "qa_cc_news_a10_hybrid": {"model": "gemini-embedding-001", "dims": 3072},
+    "qa_livedoor_a02_20_llm": {"model": "gemini-embedding-001", "dims": 3072},
+    "qa_livedoor_a03_rule": {"model": "gemini-embedding-001", "dims": 3072},
+    "qa_livedoor_a10_hybrid": {"model": "gemini-embedding-001", "dims": 3072},
 }
 
 # コレクションとCSVファイルの対応表
@@ -503,7 +503,7 @@ def embed_texts_for_qdrant(
 
 
 def create_or_recreate_collection_for_qdrant(
-    client: QdrantClient, name: str, recreate: bool, vector_size: int = 1536
+    client: QdrantClient, name: str, recreate: bool, vector_size: int = 3072
 ):
     """コレクション作成または再作成"""
     vectors_config = models.VectorParams(
@@ -644,7 +644,7 @@ def merge_collections(
     source_collections: List[str],
     target_collection: str,
     recreate: bool = True,
-    vector_size: int = 1536,
+    vector_size: int = 3072,
     progress_callback: Optional[callable] = None,
 ) -> Dict[str, Any]:
     """複数コレクションを統合して新コレクションに登録

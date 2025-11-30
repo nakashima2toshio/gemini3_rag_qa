@@ -480,8 +480,9 @@ def get_smart_keywords(text: str, mode: str = "auto", prefer_mecab: bool = True)
 class QACountOptimizer:
     """Q/Aペア数の最適化を行うクラス"""
 
-    def __init__(self):
-        self.tokenizer = tiktoken.get_encoding("cl100k_base")
+    def __init__(self, llm_model: str = "gemini-2.0-flash"):
+        self.llm_model_for_token_count = llm_model
+        self.unified_client = create_llm_client(provider="gemini", default_model=self.llm_model_for_token_count)
 
     def calculate_optimal_qa_count(self, document: str, mode: str = "auto") -> Dict[str, Any]:
         """
@@ -535,7 +536,7 @@ class QACountOptimizer:
         sentences = [s.strip() for s in sentences if s.strip()]
 
         # トークン数の計算
-        token_count = len(self.tokenizer.encode(document))
+        token_count = self.unified_client.count_tokens(document, model=self.llm_model_for_token_count)
 
         # キーワード候補の抽出
         technical_terms = re.findall(r'[ァ-ヴー]{3,}|[A-Z]{2,}[A-Z0-9]*|[一-龥]{4,}', document)
@@ -1490,7 +1491,6 @@ class SemanticCoverage:
         # Gemini埋め込みクライアントを使用
         self.embedding_client = create_embedding_client(provider="gemini")
         self.embedding_dims = get_embedding_dimensions("gemini")  # 3072
-        self.has_api_key = self.embedding_client is not None
         self.tokenizer = tiktoken.get_encoding("cl100k_base")
 
         # MeCab利用可否チェック
@@ -1566,10 +1566,12 @@ class SemanticCoverage:
             current_tokens = 0
 
             for i, sentence in enumerate(sentences):
-                sentence_tokens = len(self.tokenizer.encode(sentence))
+                sentence_tokens = self.unified_client.count_tokens(sentence, model=self.embedding_model)
 
                 # 現在のチャンクにこの文を追加すべきか判断
                 if current_tokens + sentence_tokens > max_tokens and current_chunk:
+                    # Use unified client for token counting when forming chunks
+                    chunk_text_tokens = self.unified_client.count_tokens(" ".join(current_chunk), model=self.embedding_model)
                     # チャンクを保存
                     chunk_text = " ".join(current_chunk)
                     chunks.append({
@@ -1636,7 +1638,7 @@ class SemanticCoverage:
         chunks = []
 
         for para in paragraphs:
-            para_tokens = len(self.tokenizer.encode(para))
+            para_tokens = self.unified_client.count_tokens(para, model=self.embedding_model)
 
             if para_tokens <= max_tokens:
                 # 段落がそのままチャンクとして適切
@@ -1648,12 +1650,13 @@ class SemanticCoverage:
                 current_tokens = 0
 
                 for sent in sentences:
-                    sent_tokens = len(self.tokenizer.encode(sent))
+                    sent_tokens = self.unified_client.count_tokens(sent, model=self.embedding_model)
 
                     if sent_tokens > max_tokens:
                         # 単一文が上限超過 → 強制分割
                         if current_chunk:
                             chunks.append({'text': ''.join(current_chunk), 'type': 'sentence_group'})
+                            # No need to recalculate current_tokens, just reset
                             current_chunk = []
                             current_tokens = 0
 
@@ -1777,14 +1780,14 @@ class SemanticCoverage:
         adjusted_chunks = []
 
         for i, chunk in enumerate(chunks):
-            chunk_tokens = len(self.tokenizer.encode(chunk["text"]))
+            chunk_tokens = self.unified_client.count_tokens(chunk["text"], model=self.embedding_model)
 
             # 最小トークン数以下の短いチャンクの場合
             if i > 0 and chunk_tokens < min_tokens:
                 # 前のチャンクとマージを検討
                 prev_chunk = adjusted_chunks[-1]
                 combined_text = prev_chunk["text"] + " " + chunk["text"]
-                combined_tokens = len(self.tokenizer.encode(combined_text))
+                combined_tokens = self.unified_client.count_tokens(combined_text, model=self.embedding_model)
 
                 # マージしても最大トークン数（300）を超えない場合はマージ
                 if combined_tokens < 300:
