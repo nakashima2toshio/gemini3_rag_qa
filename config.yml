@@ -1,41 +1,21 @@
-# config.yml（改修後）
+# config.yml（Gemini API学習用）
 
 models:
-  default: "gpt-5-mini"
+  default: "gemini-2.0-flash"  # Geminiデフォルトモデル
   available:
-    - "gpt-4o"
-    - "gpt-4o-mini"
-    - "gpt-4.1"
-    - "gpt-4.1-mini"
-    - "o3"
-    - "o4-mini"
-    - "gpt-5"
-    - "gpt-5-mini"
-    - "gpt-5-nano"
-
-  audio_default: "tts-1"
+    - "gemini-3-pro-preview"       # 最新Pro（思考モード対応）
+    - "gemini-2.5-flash-preview"   # 高速・思考対応
+    - "gemini-2.0-flash"           # 安定版（推奨デフォルト）
+    - "gemini-1.5-pro"             # レガシー
+    - "gemini-1.5-flash"           # レガシー高速
 
   categories:
-    frontier: ["gpt-5", "gpt-5-mini", "gpt-5-nano"]              # GPT-5 系（最新）  [oai_citation:13‡OpenAI Platform](https://platform.openai.com/docs/models/compare?utm_source=chatgpt.com)
-    reasoning: ["o3", "o4-mini", "o1", "o1-pro"]                  # o系推論モデル   [oai_citation:14‡OpenAI Platform](https://platform.openai.com/docs/models/o1?utm_source=chatgpt.com)
-    deep_research: ["o3-deep-research", "o4-mini-deep-research"]  # 深い調査用      [oai_citation:15‡OpenAI Platform](https://platform.openai.com/docs/models/o3-deep-research?utm_source=chatgpt.com)
-    standard: ["gpt-4o", "gpt-4o-mini", "gpt-4.1", "gpt-4.1-mini"]# 安定の汎用      [oai_citation:16‡OpenAI Platform](https://platform.openai.com/docs/models/gpt-4o?utm_source=chatgpt.com)
-    vision: ["gpt-5", "gpt-4o", "gpt-4o-mini"]                    # 画像入力対応    [oai_citation:17‡OpenAI Platform](https://platform.openai.com/docs/models/gpt-5-chat-latest?utm_source=chatgpt.com)
-    audio:
-      - "gpt-4o-audio-preview"
-      - "gpt-4o-mini-audio-preview"
-      - "gpt-4o-transcribe"
-      - "gpt-4o-mini-transcribe"  # 追加                  [oai_citation:18‡OpenAI Platform](https://platform.openai.com/docs/models/gpt-4o-mini-transcribe?utm_source=chatgpt.com)
-      - "gpt-4o-mini-tts"
-      - "tts-1"
-      - "tts-1-hd"
-      - "whisper-1"
-    realtime: ["gpt-4o-realtime-preview", "gpt-4o-mini-realtime-preview"]  # Realtime   [oai_citation:19‡OpenAI Platform](https://platform.openai.com/docs/models?utm_source=chatgpt.com)
-    image: ["gpt-image-1", "dall-e-3"]                                     # 画像生成   [oai_citation:20‡OpenAI Platform](https://platform.openai.com/docs/models/dall-e-3?utm_source=chatgpt.com)
-    search: ["gpt-4o-search-preview", "gpt-4o-mini-search-preview"]        # Web検索    [oai_citation:21‡OpenAI Platform](https://platform.openai.com/docs/models/compare?utm_source=chatgpt.com)
-    open_weight: ["gpt-oss-120b", "gpt-oss-20b"]                            # Open weight
-    embeddings: ["text-embedding-3-large", "text-embedding-3-small", "text-embedding-ada-002"]
-    moderation: ["omni-moderation-latest"]
+    thinking: ["gemini-3-pro-preview", "gemini-2.5-flash-preview"]  # 思考モード対応
+    fast: ["gemini-2.0-flash", "gemini-1.5-flash"]                  # 高速処理
+    standard: ["gemini-3-pro-preview", "gemini-2.5-flash-preview"]  # 標準処理
+    legacy: ["gemini-1.5-pro", "gemini-1.5-flash"]                  # レガシーモデル
+    vision: ["gemini-3-pro-preview", "gemini-2.0-flash"]            # 画像入力対応
+    embeddings: ["gemini-embedding-001"]                            # Embedding
 
 samples:
   images:

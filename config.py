@@ -23,75 +23,40 @@ from pathlib import Path
 # ===================================================================
 
 class ModelConfig:
-    """OpenAI モデル設定"""
+    """Gemini モデル設定（Gemini API学習用）"""
 
     # 利用可能なモデル一覧
     AVAILABLE_MODELS: List[str] = [
-        "gpt-5-mini",
-        "gpt-5-nano",
-        "gpt-5",
-        "gpt-4o",
-        "gpt-4o-mini",
-        "gpt-4o-audio-preview",
-        "gpt-4o-mini-audio-preview",
-        "gpt-4.1",
-        "gpt-4.1-mini",
-        "o1",
-        "o1-mini",
-        "o3",
-        "o3-mini",
-        "o4",
-        "o4-mini"
+        "gemini-3-pro-preview",       # 最新Pro（思考モード対応）
+        "gemini-2.5-flash-preview",   # 高速・思考対応
+        "gemini-2.0-flash",           # 安定版（推奨デフォルト）
+        "gemini-1.5-pro",             # レガシー
+        "gemini-1.5-flash",           # レガシー高速
     ]
 
     # デフォルトモデル
-    DEFAULT_MODEL: str = "gpt-5-mini"
+    DEFAULT_MODEL: str = "gemini-2.0-flash"
 
     # temperatureパラメータをサポートしないモデル
-    # これらのモデルはtemperature=1のみ使用可能
-    NO_TEMPERATURE_MODELS: List[str] = [
-        "gpt-5", "gpt-5-mini", "gpt-5-nano",  # GPT-5シリーズ
-        "o1", "o1-mini",                       # O1シリーズ
-        "o3", "o3-mini",                       # O3シリーズ
-        "o4", "o4-mini",                       # O4シリーズ
-    ]
+    # Geminiでは全モデルでtemperatureがサポートされる
+    NO_TEMPERATURE_MODELS: List[str] = []
 
-    # モデル料金（1000トークンあたりのドル）
+    # モデル料金（$/1M tokens）
     MODEL_PRICING: Dict[str, Dict[str, float]] = {
-        "gpt-5": {"input": 0.01, "output": 0.03},
-        "gpt-5-mini": {"input": 0.0001, "output": 0.0004},
-        "gpt-5-nano": {"input": 0.00005, "output": 0.0002},
-        "gpt-4o": {"input": 0.005, "output": 0.015},
-        "gpt-4o-mini": {"input": 0.00015, "output": 0.0006},
-        "gpt-4o-audio-preview": {"input": 0.01, "output": 0.02},
-        "gpt-4o-mini-audio-preview": {"input": 0.00025, "output": 0.001},
-        "gpt-4.1": {"input": 0.0025, "output": 0.01},
-        "gpt-4.1-mini": {"input": 0.0001, "output": 0.0004},
-        "o1": {"input": 0.015, "output": 0.06},
-        "o1-mini": {"input": 0.003, "output": 0.012},
-        "o3": {"input": 0.03, "output": 0.12},
-        "o3-mini": {"input": 0.006, "output": 0.024},
-        "o4": {"input": 0.05, "output": 0.20},
-        "o4-mini": {"input": 0.01, "output": 0.04},
+        "gemini-3-pro-preview": {"input": 0.00125, "output": 0.010},
+        "gemini-2.5-flash-preview": {"input": 0.00015, "output": 0.0035},
+        "gemini-2.0-flash": {"input": 0.0001, "output": 0.0004},
+        "gemini-1.5-pro": {"input": 0.00125, "output": 0.005},
+        "gemini-1.5-flash": {"input": 0.000075, "output": 0.0003},
     }
 
     # モデル制限
     MODEL_LIMITS: Dict[str, Dict[str, int]] = {
-        "gpt-5": {"max_tokens": 256000, "max_output": 8192},
-        "gpt-5-mini": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-5-nano": {"max_tokens": 64000, "max_output": 2048},
-        "gpt-4o": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4o-mini": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4o-audio-preview": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4o-mini-audio-preview": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4.1": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4.1-mini": {"max_tokens": 128000, "max_output": 4096},
-        "o1": {"max_tokens": 128000, "max_output": 32768},
-        "o1-mini": {"max_tokens": 128000, "max_output": 65536},
-        "o3": {"max_tokens": 200000, "max_output": 100000},
-        "o3-mini": {"max_tokens": 200000, "max_output": 100000},
-        "o4": {"max_tokens": 256000, "max_output": 128000},
-        "o4-mini": {"max_tokens": 256000, "max_output": 128000},
+        "gemini-3-pro-preview": {"max_tokens": 1000000, "max_output": 64000},
+        "gemini-2.5-flash-preview": {"max_tokens": 1000000, "max_output": 64000},
+        "gemini-2.0-flash": {"max_tokens": 1000000, "max_output": 8192},
+        "gemini-1.5-pro": {"max_tokens": 1000000, "max_output": 8192},
+        "gemini-1.5-flash": {"max_tokens": 1000000, "max_output": 8192},
     }
 
     @classmethod
@@ -112,11 +77,8 @@ class ModelConfig:
     @classmethod
     def uses_max_completion_tokens(cls, model: str) -> bool:
         """max_completion_tokensを使用するモデルかどうか"""
-        return (
-            model.startswith("gpt-5") or
-            model.startswith("o3") or
-            model.startswith("o4")
-        )
+        # Geminiでは全モデルでmax_output_tokensを使用
+        return False
 
 
 # ===================================================================
