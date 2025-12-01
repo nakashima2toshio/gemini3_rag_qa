@@ -1,0 +1,72 @@
+[
+  {
+    "question": "なぜ遠出しなかったのですか？",
+    "answer": "午後から雨が降る可能性があったため、遠出を避けました。",
+    "question_type": "reason",
+    "source_chunk_id": "japanese_text_0_chunk_0",
+    "doc_id": "japanese_text_0",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "圏央道を越えると何が見えてきますか？",
+    "answer": "圏央道を越えると、お世話になっているボウリング場が見えてきます。",
+    "question_type": "fact",
+    "source_chunk_id": "japanese_text_1_chunk_0",
+    "doc_id": "japanese_text_1",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "テキストから、春が近づいていることをどのように感じていますか？",
+    "answer": "テキストでは、「肌で感じることができた」と表現されており、気温や日差しの変化などを直接的に感じていることを示唆しています。",
+    "question_type": "reason",
+    "source_chunk_id": "japanese_text_1_chunk_0",
+    "doc_id": "japanese_text_1",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "なぜ途中でケンタッキーフライドチキンに変更したのですか？",
+    "answer": "トイレに行きたくなったため、通り道にあったケンタッキーフライドチキンに変更しました。",
+    "question_type": "reason",
+    "source_chunk_id": "japanese_text_2_chunk_0",
+    "doc_id": "japanese_text_2",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "エルモサの右目に小さな斑が見つかったのはいつですか？",
+    "answer": "約1年前に、エルモサの右目の黒目の端によく見ないと分からないほどの小さな斑が見つかりました。",
+    "question_type": "fact",
+    "source_chunk_id": "japanese_text_3_chunk_0",
+    "doc_id": "japanese_text_3",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "エルモサの右目の斑はどの程度目立ちますか？",
+    "answer": "非常によく見ないと分からない程度の大きさです。",
+    "question_type": "fact",
+    "source_chunk_id": "japanese_text_3_chunk_0",
+    "doc_id": "japanese_text_3",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "先生から診断された病名は何ですか？",
+    "answer": "角膜ジストロフィーであると診断されました。",
+    "question_type": "fact",
+    "source_chunk_id": "japanese_text_4_chunk_0",
+    "doc_id": "japanese_text_4",
+    "dataset_type": "japanese_text",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  }
+]

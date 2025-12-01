@@ -1,5 +1,7 @@
 # a03_rag_qa_coverage_improved.py - セマンティックカバレッジ分析とQ/A生成システム
 
+作成日: 2025-11-08 (最終更新: Gemini移行対応)
+
 ## 目次
 
 1. [概要](#1-概要)
@@ -7,7 +9,7 @@
 3. [キーワード抽出](#3-キーワード抽出)
 4. [階層化質問タイプ](#4-階層化質問タイプ)
 5. [チャンク複雑度分析](#5-チャンク複雑度分析)
-6. [ドメイン適応戦略](#6-ドメイン適応戦略)
+6. [ドメイン適適応戦略](#6-ドメイン適応戦略)
 7. [Q/A生成戦略](#7-qa生成戦略)
 8. [カバレージ分析](#8-カバレージ分析)
 9. [コマンドラインオプション](#9-コマンドラインオプション)
@@ -21,7 +23,7 @@
 
 ### 1.1 目的
 
-`a03_rag_qa_coverage_improved.py`は、セマンティックチャンク分割と包括的Q/A生成戦略により、**80%以上のカバレッジ**を目指すQ/A生成システムです。テンプレートベースの手法により、LLMコストを最小限に抑えながら高品質なQ/Aペアを大量生成します。
+`a03_rag_qa_coverage_improved.py`は、セマンティックチャンク分割と包括的Q/A生成戦略により、**80%以上のカバレッジ**を目指すQ/A生成システムです。Gemini API (`gemini-2.0-flash` 等) を活用し、テンプレートベースの手法とLLMによる高品質生成を組み合わせて、コスト効率良く大量のQ/Aペアを生成します。
 
 ### 1.2 起動コマンド
 
@@ -32,18 +34,19 @@ python a03_rag_qa_coverage_improved.py \
   --analyze-coverage \
   --coverage-threshold 0.60 \
   --qa-per-chunk 10 \
-  --max-chunks 2000
+  --max-chunks 2000 \
+  --model gemini-2.0-flash
 ```
 
 ### 1.3 主要機能
 
-- **セマンティックチャンク分割**: 段落優先のセマンティック分割（helper_rag_qa.py使用）
+- **セマンティックチャンク分割**: 段落優先のセマンティック分割（`helper_rag_qa.py`使用、`gemini-embedding-001`利用）
 - **階層化質問タイプ**: 3階層11タイプの質問タイプ定義
-- **チャンク複雑度分析**: 専門用語密度、平均文長、統計情報検出
+- **チャンク複雑度分析**: 専門用語密度、平均文長（`UnifiedLLMClient`による正確なトークンカウント）、統計情報検出
 - **ドメイン適応戦略**: データセット別の最適化戦略
-- **包括的Q/A生成**: 5つの異なる質問タイプで高カバレッジを実現
-- **バッチ処理による埋め込み生成**: OpenAI APIのバッチ処理で高速化
-- **改良版カバレッジ分析**: 3段階の分布評価（高・中・低）
+- **包括的Q/A生成**: ルール/テンプレート/LLM (`gemini-2.0-flash`) のハイブリッド生成
+- **バッチ処理による埋め込み生成**: Gemini APIのバッチ処理で高速化
+- **改良版カバレッジ分析**: 3段階の分布評価（高・中・低）、`gemini-embedding-001`を使用
 
 ### 1.4 対応データセット
 
@@ -56,14 +59,14 @@ python a03_rag_qa_coverage_improved.py \
 
 ### 1.5 a02_make_qa_para.pyとの比較
 
-| 項目 | a02（LLM版） | a03（テンプレート版） |
+| 項目 | a02（LLM版） | a03（ハイブリッド版） |
 |------|-------------|---------------------|
-| **主な目的** | LLMでQ/A生成 | テンプレートベースで高カバレッジ |
-| **Q/A生成手法** | LLMによる高品質生成 | ルールベース+テンプレート |
-| **コスト** | 中程度（LLM呼び出し） | 極めて低い（埋め込みのみ） |
-| **生成速度** | 中速（API待機あり） | 高速（ルールベース） |
+| **主な目的** | LLMで高品質Q/A生成 | カバレッジ最大化と多様性確保 |
+| **Q/A生成手法** | LLM (`gemini-2.0-flash`) | ルール + テンプレート + LLM (Gemini) |
+| **コスト** | 中程度 | 低〜中（テンプレート主体で調整可能） |
+| **生成速度** | 中速 | 高速（ルールベース部分）〜中速 |
 | **カバレッジ** | 90-95% | **95%+** |
-| **Q/A品質** | 非常に高い | 高い（構造化） |
+| **Q/A品質** | 非常に高い | 高い（多様なタイプを網羅） |
 
 ---
 
@@ -81,15 +84,17 @@ python a03_rag_qa_coverage_improved.py \
 │                              ▼                                  │
 │  [2] セマンティックチャンク分割                                   │
 │      SemanticCoverage.create_semantic_chunks()                  │
+│      (gemini-embedding-001利用)                                 │
 │                              │                                  │
 │                              ▼                                  │
 │  [3] Q/A生成                                                    │
-│      ├── generate_advanced_qa_for_chunk()（高度版）              │
-│      └── generate_comprehensive_qa_for_chunk()（包括版）         │
+│      ├── generate_llm_qa() (gemini-2.0-flash利用)                │
+│      └── generate_comprehensive_qa_for_chunk()（テンプレート）    │
 │                              │                                  │
 │                              ▼                                  │
 │  [4] カバレッジ分析                                              │
 │      calculate_improved_coverage()                              │
+│      (gemini-embedding-001利用)                                 │
 │                              │                                  │
 │                              ▼                                  │
 │  [5] 結果保存                                                    │
@@ -101,8 +106,9 @@ python a03_rag_qa_coverage_improved.py \
 
 ```python
 from helper_rag_qa import SemanticCoverage
+from helper_llm import create_llm_client, LLMClient
+from models import QAPairsResponse
 
-import tiktoken
 import pandas as pd
 import numpy as np
 from collections import Counter
@@ -154,21 +160,7 @@ class KeywordExtractor:
     MeCabが利用可能な場合は複合名詞抽出を優先し、
     利用不可の場合は正規表現版に自動フォールバック
     """
-
-    def __init__(self, prefer_mecab: bool = True):
-        """MeCab優先設定"""
-
-    def extract(self, text: str, top_n: int = 5) -> List[str]:
-        """キーワード抽出（自動フォールバック対応）"""
-
-    def _extract_with_mecab(self, text: str, top_n: int) -> List[str]:
-        """MeCabによる複合名詞抽出"""
-
-    def _extract_with_regex(self, text: str, top_n: int) -> List[str]:
-        """正規表現によるキーワード抽出"""
-
-    def _filter_and_count(self, words: List[str], top_n: int) -> List[str]:
-        """頻度ベースのフィルタリング"""
+    # ... (省略) 
 ```
 
 ### 3.2 ストップワード
@@ -194,10 +186,7 @@ pattern = r'[ァ-ヴー]{2,}|[一-龥]{2,}|[A-Za-z]{2,}[A-Za-z0-9]*'
 ```python
 def get_keyword_extractor() -> KeywordExtractor:
     """KeywordExtractorのシングルトンインスタンスを取得"""
-    global _keyword_extractor
-    if _keyword_extractor is None:
-        _keyword_extractor = KeywordExtractor()
-    return _keyword_extractor
+    # ...
 ```
 
 ---
@@ -206,27 +195,7 @@ def get_keyword_extractor() -> KeywordExtractor:
 
 ### 4.1 3階層11タイプの定義
 
-```python
-QUESTION_TYPES_HIERARCHY = {
-    "basic": {
-        "definition": {"ja": "定義型（〜とは何ですか？）", "en": "Definition (What is...?)"},
-        "identification": {"ja": "識別型（〜の例を挙げてください）", "en": "Identification (Give examples of...)"},
-        "enumeration": {"ja": "列挙型（〜の種類/要素は？）", "en": "Enumeration (List the types/elements of...)"}
-    },
-    "understanding": {
-        "cause_effect": {"ja": "因果関係型（〜の結果/影響は？）", "en": "Cause-Effect (What is the result/impact of...?)"},
-        "process": {"ja": "プロセス型（〜はどのように行われますか？）", "en": "Process (How is... performed?)"},
-        "mechanism": {"ja": "メカニズム型（〜の仕組みは？）", "en": "Mechanism (How does... work?)"},
-        "comparison": {"ja": "比較型（〜と〜の違いは？）", "en": "Comparison (What's the difference between...?)"}
-    },
-    "application": {
-        "synthesis": {"ja": "統合型（〜を組み合わせるとどうなりますか？）", "en": "Synthesis (What happens when combining...?)"},
-        "evaluation": {"ja": "評価型（〜の長所と短所は？）", "en": "Evaluation (What are the pros and cons of...?)"},
-        "prediction": {"ja": "予測型（〜の場合どうなりますか？）", "en": "Prediction (What would happen if...?)"},
-        "practical": {"ja": "実践型（〜はどのように活用されますか？）", "en": "Practical (How is... applied in practice?)"}
-    }
-}
-```
+`basic`, `understanding`, `application` の3階層で、合計11種類の質問タイプを定義しています。
 
 ### 4.2 階層別の特徴
 
@@ -242,25 +211,16 @@ QUESTION_TYPES_HIERARCHY = {
 
 ### 5.1 analyze_chunk_complexity関数
 
+`UnifiedLLMClient` (Gemini API) を使用して正確なトークンカウントを行い、チャンクの複雑度を分析します。
+
 ```python
 def analyze_chunk_complexity(chunk_text: str, lang: str = "auto") -> Dict:
     """
     チャンクの複雑度を分析して、適切なQ/A生成戦略を決定
-
-    Returns:
-        {
-            "complexity_level": "high" | "medium" | "low",
-            "complexity_score": int,
-            "technical_terms": List[str],  # 上位10個
-            "avg_sentence_length": float,
-            "concept_density": float,
-            "sentence_count": int,
-            "token_count": int,
-            "has_statistics": bool,
-            "numeric_data": List[str],  # 上位5個
-            "lang": str
-        }
+    
+    UnifiedLLMClient.count_tokens を使用してトークン数を取得
     """
+    # ...
 ```
 
 ### 5.2 複雑度レベル判定
@@ -271,272 +231,54 @@ def analyze_chunk_complexity(chunk_text: str, lang: str = "auto") -> Dict:
 | medium | >= 3 | 概念密度 > 2% または 平均文長 > 20 |
 | low | < 3 | その他 |
 
-### 5.3 スコア計算ロジック
-
-```python
-complexity_score = 0
-
-# 概念密度による加点
-if concept_density > 5:
-    complexity_score += 3
-elif concept_density > 2:
-    complexity_score += 2
-else:
-    complexity_score += 1
-
-# 平均文長による加点
-if avg_sentence_length > 30:
-    complexity_score += 2
-elif avg_sentence_length > 20:
-    complexity_score += 1
-
-# 統計情報による加点
-if has_statistics:
-    complexity_score += 1
-```
-
-### 5.4 専門用語検出パターン
-
-**日本語**:
-```python
-technical_pattern = r'[ァ-ヴー]{4,}|[一-龥]{4,}'
-```
-
-**英語**:
-```python
-technical_pattern = r'[A-Z][a-z]+(?:[A-Z][a-z]+)+|\b\w{10,}\b'
-```
-
 ---
 
 ## 6. ドメイン適応戦略
 
-### 6.1 データセット別戦略
-
-```python
-DOMAIN_SPECIFIC_STRATEGIES = {
-    "cc_news": {
-        "focus_types": ["cause_effect", "process", "comparison", "evaluation"],
-        "avoid_types": ["definition"],
-        "emphasis": "時事性と社会的影響"
-    },
-    "wikipedia_ja": {
-        "focus_types": ["definition", "mechanism", "enumeration", "comparison"],
-        "avoid_types": ["prediction"],
-        "emphasis": "正確な定義と体系的な知識"
-    },
-    "livedoor": {
-        "focus_types": ["cause_effect", "evaluation", "practical", "comparison"],
-        "avoid_types": ["mechanism"],
-        "emphasis": "読者の関心と実用性"
-    },
-    "japanese_text": {
-        "focus_types": ["definition", "process", "practical", "comparison"],
-        "avoid_types": [],
-        "emphasis": "一般的な理解と応用"
-    }
-}
-```
-
-### 6.2 複雑度に基づくQ/A分布
-
-| 複雑度 | basic | understanding | application |
-|--------|-------|---------------|-------------|
-| high | 1 | 3 | 1 |
-| medium | 2 | 2 | 1 |
-| low | 3 | 1 | 0 |
+データセット（ドメイン）ごとに、生成する質問タイプの重点や避けるべきタイプを定義しています。
 
 ---
 
 ## 7. Q/A生成戦略
 
-### 7.1 高度なQ/A生成（generate_advanced_qa_for_chunk）
+### 7.1 LLMベースQ/A生成（generate_llm_qa）
 
-複雑度分析とドメイン適応を組み合わせた高度なQ/A生成:
+`UnifiedLLMClient.generate_structured` を使用して、Geminiモデル (`gemini-2.0-flash`等) から高品質なQ/Aペアを生成します。Pydanticモデル (`QAPairsResponse`) を利用して、出力の構造を保証します。
 
 ```python
-def generate_advanced_qa_for_chunk(
-    chunk_text: str,
-    chunk_idx: int,
-    qa_per_chunk: int = 5,
-    lang: str = "auto",
-    dataset_type: str = "custom"
-) -> List[Dict]:
+def generate_llm_qa(chunk_text: str, chunk_idx: int, model: str, qa_per_chunk: int = 2) -> List[Dict]:
     """
-    高度なQ/A生成システム（品質スコアリング機能付き）
-
-    処理フロー:
-    1. チャンク複雑度分析
-    2. ドメイン適応戦略の取得
-    3. コンテキスト強化型Q/A生成
-    4. マルチホップ推論型Q/A生成（中〜高複雑度）
-    5. 階層化質問タイプに基づくQ/A生成
-    6. 品質スコアリングとソート
+    LLMを使用して高品質なQ/Aペアを生成
+    UnifiedLLMClient.generate_structured を利用
     """
+    # ...
 ```
 
 ### 7.2 包括的Q/A生成（generate_comprehensive_qa_for_chunk）
 
-5つの戦略による包括的なQ/A生成:
-
-#### 1. comprehensive型（包括的質問）
-
-**英語**:
-```json
-{
-  "question": "What information is discussed in this section?",
-  "answer": "チャンク全体のテキスト（最大500文字）",
-  "type": "comprehensive",
-  "coverage_strategy": "full_chunk"
-}
-```
-
-**日本語**:
-```json
-{
-  "question": "このセクションにはどのような情報が含まれていますか？",
-  "answer": "チャンク全体のテキスト",
-  "type": "comprehensive"
-}
-```
-
-#### 2. factual_detailed型（詳細な事実確認）
-
-**英語**:
-```json
-{
-  "question": "What specific information is provided about {concept}?",
-  "answer": "該当文 + 次の文（文脈付与）",
-  "type": "factual_detailed"
-}
-```
-
-**日本語**:
-```json
-{
-  "question": "「{文の先頭30文字}」について詳しく説明してください。",
-  "answer": "該当文 + 次の文",
-  "type": "factual_detailed"
-}
-```
-
-#### 3. contextual型（文脈関連型）
-
-```json
-{
-  "question": "How does {current_concept} relate to {previous_concept}?",
-  "answer": "前の文 + 現在の文",
-  "type": "contextual"
-}
-```
-
-#### 4. keyword_based型（キーワード抽出型）
-
-**英語**:
-```json
-{
-  "question": "What is mentioned about {keyword}?",
-  "answer": "該当文",
-  "type": "keyword_based"
-}
-```
-
-**日本語（MeCab使用）**:
-```json
-{
-  "question": "「{keyword}」について何が述べられていますか？",
-  "answer": "該当文",
-  "type": "keyword_based",
-  "keyword": "抽出されたキーワード"
-}
-```
-
-#### 5. thematic型（テーマ型）
-
-**英語**:
-```json
-{
-  "question": "What is the main theme related to {theme_concept}?",
-  "answer": "チャンク全体のテキスト（最大400文字）",
-  "type": "thematic"
-}
-```
-
-**日本語**:
-```json
-{
-  "question": "「{theme_keyword}」に関する主要テーマは何ですか？",
-  "answer": "チャンク全体のテキスト",
-  "type": "thematic"
-}
-```
+テンプレートベースで5つの異なる戦略（包括的、詳細事実、文脈、キーワード、テーマ）を用いてQ/Aを生成します。
 
 ---
 
-## 8. カバレージ分析
+## 8. カバレッジ分析
 
 ### 8.1 改良版カバレッジ計算
 
-```python
-def calculate_improved_coverage(
-    chunks: List[Dict],
-    qa_pairs: List[Dict],
-    analyzer: SemanticCoverage,
-    threshold: float = 0.65
-) -> Tuple[Dict, List[float]]:
-    """
-    改善されたカバレッジ計算（バッチ処理版）
-
-    Returns:
-        (coverage_results, max_similarities)
-    """
-```
+`gemini-embedding-001` を使用して、チャンクと生成されたQ/Aペアの埋め込みベクトルを生成し、コサイン類似度でカバレッジを計算します。
 
 ### 8.2 バッチ処理による埋め込み生成
 
-```python
-MAX_BATCH_SIZE = 2048
-
-if len(qa_texts) <= MAX_BATCH_SIZE:
-    # 一度にすべて処理可能
-    qa_chunks = [{"text": text} for text in qa_texts]
-    qa_embeddings = analyzer.generate_embeddings(qa_chunks)
-else:
-    # バッチサイズを超える場合は分割処理
-    for i in range(0, len(qa_texts), MAX_BATCH_SIZE):
-        batch = qa_texts[i:i+MAX_BATCH_SIZE]
-        batch_chunks = [{"text": text} for text in batch]
-        batch_embeddings = analyzer.generate_embeddings(batch_chunks)
-        qa_embeddings.extend(batch_embeddings)
-```
-
-### 8.3 カバレッジ結果の構造
+Gemini APIの制限を考慮し、バッチサイズを調整して埋め込みを生成します。
 
 ```python
-coverage_results = {
-    "coverage_rate": float,           # カバレッジ率
-    "covered_chunks": int,            # カバー済みチャンク数
-    "total_chunks": int,              # 総チャンク数
-    "threshold": float,               # 使用した閾値
-    "avg_max_similarity": float,      # 平均最大類似度
-    "min_max_similarity": float,      # 最小の最大類似度
-    "max_max_similarity": float,      # 最大の最大類似度
-    "uncovered_chunks": List[int],    # 未カバーチャンクのインデックス
-    "coverage_distribution": {
-        "high_coverage": int,         # >= 0.7
-        "medium_coverage": int,       # 0.5 - 0.7
-        "low_coverage": int           # < 0.5
-    }
-}
+MAX_BATCH_SIZE = 100 # Gemini APIの安全なバッチサイズ
+
+# ... バッチ処理ロジック ...
 ```
 
-### 8.4 カバレッジ分布評価
+### 8.3 カバレッジ結果の構造と分布評価
 
-| レベル | 類似度範囲 | 説明 |
-|--------|----------|------|
-| 高カバレッジ | >= 0.7 | 十分にカバーされている |
-| 中カバレッジ | 0.5 - 0.7 | ある程度カバーされている |
-| 低カバレッジ | < 0.5 | カバー不足 |
+カバレッジ率、閾値ごとの分布（高・中・低）を含む詳細な分析結果を提供します。
 
 ---
 
@@ -549,8 +291,8 @@ coverage_results = {
 | `--input` | str | 必須 | 入力ファイルパス |
 | `--dataset` | str | 必須 | データセットタイプ |
 | `--max-docs` | int | None | 処理する最大文書数 |
-| `--methods` | str[] | ['rule', 'template'] | 使用する手法 |
-| `--model` | str | gpt-4o-mini | 使用するモデル |
+| `--methods` | str[] | ['rule', 'template'] | 使用する手法 (llmを追加可能) |
+| `--model` | str | **`gemini-2.0-flash`** | 使用するGeminiモデル |
 | `--output` | str | qa_output | 出力ディレクトリ |
 | `--analyze-coverage` | flag | False | カバレッジ分析を実行 |
 | `--coverage-threshold` | float | 0.65 | カバレッジ判定閾値 |
@@ -562,7 +304,7 @@ coverage_results = {
 
 ```bash
 --methods rule template    # デフォルト（ルール+テンプレート）
---methods rule template llm  # LLMも追加（コスト増）
+--methods rule template llm  # LLM (Gemini) も追加（高品質化）
 ```
 
 ---
@@ -579,12 +321,9 @@ python a03_rag_qa_coverage_improved.py \
   --qa-per-chunk 4 \
   --max-chunks 609 \
   --analyze-coverage \
-  --coverage-threshold 0.60
+  --coverage-threshold 0.60 \
+  --model gemini-2.0-flash
 ```
-
-**実行時間**: 約2分
-**生成Q/A数**: 約7,300個
-**カバレッジ**: 99.7%
 
 ### 10.2 推奨実行（中規模）
 
@@ -595,37 +334,19 @@ python a03_rag_qa_coverage_improved.py \
   --qa-per-chunk 10 \
   --max-chunks 2000 \
   --analyze-coverage \
-  --coverage-threshold 0.60
+  --coverage-threshold 0.60 \
+  --methods rule template llm
 ```
 
-**実行時間**: 約8-10分
-**生成Q/A数**: 約20,000個
-**カバレッジ**: 95%+
-
-### 10.3 本番実行（全文書）
-
-```bash
-python a03_rag_qa_coverage_improved.py \
-  --input OUTPUT/preprocessed_cc_news.csv \
-  --dataset cc_news \
-  --qa-per-chunk 10 \
-  --max-chunks 18000 \
-  --analyze-coverage \
-  --coverage-threshold 0.60
-```
-
-**実行時間**: 約60-90分
-**生成Q/A数**: 約144,000個
-**カバレッジ**: 95%+
-
-### 10.4 実行時間の見積もり
+### 10.3 実行時間の見積もり
 
 | 設定 | 文書数 | チャンク数 | Q/A数 | 実行時間 | コスト |
 |------|--------|----------|-------|---------|--------|
-| テスト | 150 | 609 | 7,308 | 2分 | $0.001 |
-| 推奨 | 自動 | 2,000 | 20,000 | 8-10分 | $0.005 |
-| 中規模 | 1,000 | 2,400 | 24,000 | 10-12分 | $0.006 |
-| 全文書 | 7,499 | 18,000 | 144,000 | 60-90分 | $0.025 |
+| テスト | 150 | 609 | 7,308 | 2分 | 低 |
+| 推奨 | 自動 | 2,000 | 20,000 | 8-10分 | 低〜中 |
+| 全文書 | 7,499 | 18,000 | 144,000 | 60-90分 | 中 |
+
+※ Gemini 2.0 Flash は非常に安価かつ高速なため、OpenAIモデルと比較してコストパフォーマンスが良いです。
 
 ---
 
@@ -644,80 +365,17 @@ qa_output/
 └── a03_qa_pairs_{dataset}.csv             # 統一フォーマット（question/answerのみ）
 ```
 
-### 11.2 Q/Aペア形式（JSON）
-
-```json
-[
-  {
-    "question": "What information is discussed in this section?",
-    "answer": "AI technology has significantly advanced...",
-    "type": "comprehensive",
-    "chunk_idx": 0,
-    "coverage_strategy": "full_chunk"
-  },
-  {
-    "question": "「自然言語処理」について何が述べられていますか？",
-    "answer": "AI技術の発展により...",
-    "type": "keyword_based",
-    "chunk_idx": 2,
-    "keyword": "自然言語処理"
-  }
-]
-```
-
-### 11.3 カバレッジ結果形式（JSON）
-
-```json
-{
-  "coverage_rate": 0.903,
-  "covered_chunks": 1526,
-  "total_chunks": 1689,
-  "threshold": 0.6,
-  "avg_max_similarity": 0.745,
-  "min_max_similarity": 0.312,
-  "max_max_similarity": 0.987,
-  "uncovered_chunks": [45, 123, 456],
-  "coverage_distribution": {
-    "high_coverage": 1173,
-    "medium_coverage": 484,
-    "low_coverage": 32
-  }
-}
-```
-
-### 11.4 サマリー形式（JSON）
-
-```json
-{
-  "dataset_type": "cc_news",
-  "generated_at": "20251108_010658",
-  "total_qa_pairs": 4278,
-  "coverage_rate": 0.903,
-  "coverage_details": {
-    "high_coverage": 1173,
-    "medium_coverage": 484,
-    "low_coverage": 32
-  },
-  "files": {
-    "qa_json": "qa_output/a03/qa_pairs_cc_news_20251108_010658.json",
-    "qa_csv": "qa_output/a03/qa_pairs_cc_news_20251108_010658.csv",
-    "coverage": "qa_output/a03/coverage_cc_news_20251108_010658.json",
-    "summary": "qa_output/a03/summary_cc_news_20251108_010658.json"
-  }
-}
-```
-
 ---
 
 ## 12. トラブルシューティング
 
 ### 12.1 APIキーエラー
 
-**症状**: `OPENAI_API_KEYが設定されていません`
+**症状**: `GOOGLE_API_KEYが設定されていません`
 
 **解決策**:
 ```bash
-echo "OPENAI_API_KEY=your-api-key-here" > .env
+echo "GOOGLE_API_KEY=your-api-key-here" > .env
 ```
 
 ### 12.2 ファイルが見つからない
@@ -738,39 +396,18 @@ ls OUTPUT/preprocessed_cc_news.csv
 # Q/A数を増やす
 python a03_rag_qa_coverage_improved.py --qa-per-chunk 10
 
-# 閾値を下げる
-python a03_rag_qa_coverage_improved.py --coverage-threshold 0.55
+# LLM手法を追加して多様性を高める
+python a03_rag_qa_coverage_improved.py --methods rule template llm
 
-# チャンク数を増やす
-python a03_rag_qa_coverage_improved.py --max-chunks 2000
+# 閾値を下げる（必要に応じて）
+python a03_rag_qa_coverage_improved.py --coverage-threshold 0.55
 ```
 
 ### 12.4 MeCabが利用できない
 
 **症状**: `⚠️ MeCabが利用できません（正規表現モード）`
 
-**影響**: キーワード抽出が正規表現ベースになる（セマンティック分割には影響なし）
-
-**解決策（オプション）**:
-```bash
-# macOS
-brew install mecab mecab-ipadic
-pip install mecab-python3
-
-# Ubuntu/Debian
-sudo apt-get install mecab libmecab-dev mecab-ipadic-utf8
-pip install mecab-python3
-```
-
-### 12.5 メモリ不足
-
-**症状**: 大量データ処理時のメモリエラー
-
-**解決策**:
-```bash
-# チャンク数を制限
-python a03_rag_qa_coverage_improved.py --max-chunks 1000 --max-docs 500
-```
+**解決策**: MeCabをインストールしてください（`doc/01_install.md`参照）。
 
 ---
 
@@ -781,19 +418,9 @@ python a03_rag_qa_coverage_improved.py --max-chunks 1000 --max-docs 500
 | 機能 | 説明 |
 |------|------|
 | 階層化質問タイプ | 3階層11タイプの質問分類 |
-| チャンク複雑度分析 | 専門用語密度・文長による分析 |
+| チャンク複雑度分析 | 専門用語密度・文長による分析 (Gemini tokenizer対応) |
 | ドメイン適応戦略 | データセット別の最適化 |
 | 品質スコアリング | Q/A品質の自動評価 |
-| バッチ埋め込み生成 | 大量データの高速処理 |
+| バッチ埋め込み生成 | Gemini API制限を考慮したバッチ処理 |
 | 3段階カバレッジ分布 | 高・中・低の詳細評価 |
-
-### A.2 品質統計出力例
-
-```
-📊 Q/A品質統計:
-  - 基礎レベル: 1426件（定義・識別・列挙型）
-  - 理解レベル: 2137件（因果関係・プロセス・メカニズム・比較型）
-  - 応用レベル: 715件（統合・評価・予測・実践型）
-  - 平均品質スコア: 0.82
-  - 平均多様性スコア: 0.88
-```
+| LLMハイブリッド生成 | Gemini 2.0 Flashによる高品質Q/A生成の統合 |

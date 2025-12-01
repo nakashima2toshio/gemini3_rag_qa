@@ -56,7 +56,7 @@ python a10_qa_optimized_hybrid_batch.py --dataset livedoor --batch-size 10 --emb
 
 python a10_qa_optimized_hybrid_batch.py \
 --dataset cc_news \
---model gpt-5-mini \
+--model gemini-2.0-flash \
 --quality-mode \
 --target-coverage 0.95 \
 --batch-size 10 \
@@ -68,7 +68,7 @@ python a10_qa_optimized_hybrid_batch.py \
 # キャッシュ活用版（同じデータセットの再実行時）
 python a10_qa_optimized_hybrid_batch.py \
 --dataset cc_news \
---model gpt-5-mini \
+--model gemini-2.0-flash \
 --quality-mode \
 --target-coverage 0.95 \
 --batch-size 10 \
@@ -80,7 +80,7 @@ python a10_qa_optimized_hybrid_batch.py \
 # 段階的品質向上版（初回は速度優先、後で品質向上）
 python a10_qa_optimized_hybrid_batch.py \
 --dataset cc_news \
---model gpt-5-mini \
+--model gemini-2.0-flash \
 --progressive-quality \
 --initial-coverage 0.85 \
 --final-coverage 0.95 \
@@ -91,7 +91,7 @@ python a10_qa_optimized_hybrid_batch.py \
 # 確実に95%達成するための推奨コマンド（品質重視モード）
 python a10_qa_optimized_hybrid_batch.py \
   --dataset cc_news \
-  --model gpt-5-mini \
+  --model gemini-2.0-flash \
   --quality-mode \
   --target-coverage 0.95 \
   --batch-size 5 \
@@ -110,7 +110,7 @@ python a10_qa_optimized_hybrid_batch.py \
     python a10_qa_optimized_hybrid_batch.py --dataset cc_news --batch-size 20
 
     # モデル指定
-    python a10_qa_optimized_hybrid_batch.py --dataset cc_news --model gpt-5-mini
+    python a10_qa_optimized_hybrid_batch.py --dataset cc_news --model gemini-2.0-flash
 
     # 日本語データセット（MeCab自動利用）
     python a10_qa_optimized_hybrid_batch.py --dataset japanese_text
@@ -225,7 +225,7 @@ def load_preprocessed_data(dataset_type: str, max_docs: Optional[int] = None) ->
 def generate_batch_qa_from_dataset(
     df: pd.DataFrame,
     dataset_type: str,
-    model: str = "gpt-5-mini",
+    model: str = "gemini-2.0-flash",
     batch_size: int = 10,
     embedding_batch_size: int = 100,
     qa_count: Optional[int] = None,
@@ -373,7 +373,7 @@ def generate_batch_qa_from_dataset(
 def compare_with_normal_version(
     df: pd.DataFrame,
     dataset_type: str,
-    model: str = "gpt-5-mini",
+    model: str = "gemini-2.0-flash",
     sample_size: int = 10
 ) -> Dict:
     """通常版とバッチ版の性能比較"""
@@ -561,7 +561,7 @@ def main():
     parser.add_argument(
         "--model",
         type=str,
-        default="gpt-5-mini",
+        default="gemini-2.0-flash",
         help="使用するLLMモデル"
     )
     parser.add_argument(
@@ -664,9 +664,9 @@ def main():
 
     args = parser.parse_args()
 
-    # OpenAI APIキーの確認
-    if not args.no_llm and not os.getenv('OPENAI_API_KEY'):
-        logger.error("OpenAI APIキーが設定されていません。環境変数 OPENAI_API_KEY を設定してください。")
+    # Google APIキーの確認
+    if not args.no_llm and not os.getenv('GOOGLE_API_KEY'):
+        logger.error("Google APIキーが設定されていません。環境変数 GOOGLE_API_KEY を設定してください。")
         sys.exit(1)
 
     logger.info(f"""

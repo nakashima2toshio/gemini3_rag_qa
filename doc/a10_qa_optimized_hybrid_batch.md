@@ -1,5 +1,7 @@
 # a10_qa_optimized_hybrid_batch.py - バッチ処理版ハイブリッドQ/A生成システム
 
+作成日: 2025-11-28 (最終更新: Gemini移行対応)
+
 ## 目次
 
 1. [概要](#1-概要)
@@ -21,33 +23,33 @@
 
 ### 1.1 目的
 
-`a10_qa_optimized_hybrid_batch.py`は、**大規模バッチ処理**に最適化されたハイブリッドQ/A生成システムです。複数文書を一度のAPI呼び出しで処理し、API呼び出し回数を**92.6%削減**しながら、品質重視モードで**95%のカバレッジ**を実現します。
+`a10_qa_optimized_hybrid_batch.py`は、**大規模バッチ処理**に最適化されたハイブリッドQ/A生成システムです。Google Gemini API (`gemini-2.0-flash` 等) を活用し、複数文書を一度のAPI呼び出しで処理することで、API呼び出し回数を大幅に削減しながら、品質重視モードで**95%のカバレッジ**を実現します。
 
 ### 1.2 起動コマンド
 
 ```bash
 # 基本使用
-python a10_qa_optimized_hybrid_batch.py --dataset cc_news
+python a10_qa_optimized_hybrid_batch.py --dataset cc_news --model gemini-2.0-flash
 
 # 品質重視モード（推奨）
-python a10_qa_optimized_hybrid_batch.py \
-  --dataset cc_news \
-  --model gpt-5-mini \
-  --quality-mode \
-  --target-coverage 0.95 \
-  --batch-size 10 \
+python a10_qa_optimized_hybrid_batch.py 
+  --dataset cc_news 
+  --model gemini-2.0-flash 
+  --quality-mode 
+  --target-coverage 0.95 
+  --batch-size 10 
   --embedding-batch-size 300
 ```
 
 ### 1.3 主要機能
 
-- **大規模バッチ処理**: 10-20文書を一度のLLM呼び出しで処理
-- **ハイブリッド生成戦略**: ルールベース+LLMの2段階Q/A生成
-- **品質重視モード**: カバレッジ95%を目標とした高品質生成
-- **キャッシュ機能**: 2回目以降の実行時間を50%短縮
-- **段階的品質向上**: 初回は速度優先、後から品質向上
-- **MeCab対応**: 日本語データセットで高精度文境界検出（利用可能時）
-- **比較実行モード**: 通常版とバッチ版の性能比較
+-   **大規模バッチ処理**: 複数文書を一度のLLM呼び出しで処理し、APIコストとレイテンシを削減
+-   **ハイブリッド生成戦略**: ルールベースとLLM (`gemini-2.0-flash`) を組み合わせた効率的なQ/A生成
+-   **品質重視モード**: `gemini-embedding-001` を使用したカバレッジ分析に基づき、目標95%達成を目指す高品質生成
+-   **キャッシュ機能**: 埋め込みベクトルのキャッシュにより、2回目以降の実行時間を短縮
+-   **段階的品質向上**: 初回は速度優先、後から品質を向上させる戦略をサポート
+-   **MeCab対応**: 日本語データセットで高精度文境界検出（利用可能時）
+-   **比較実行モード**: 通常版とバッチ版の性能を比較し、最適化効果を可視化
 
 ### 1.4 MeCab対応
 
@@ -60,12 +62,12 @@ python a10_qa_optimized_hybrid_batch.py \
 
 | 項目 | a02（LLM版） | a03（テンプレート版） | a10（ハイブリッドバッチ） |
 |------|-------------|---------------------|----------------------|
-| **Q/A生成手法** | LLMのみ | テンプレートのみ | ルールベース+LLM |
+| **Q/A生成手法** | LLM (`gemini-2.0-flash`) のみ | テンプレートのみ | ルールベース+LLM (Gemini) |
 | **API呼び出し** | 多い | 最小（埋め込みのみ） | 中程度（バッチ化） |
-| **処理時間** | 60-80分 | 60-90分 | **61分（バッチ化）** |
-| **コスト** | $36.40 | $0.05 | **$0.20** |
+| **処理時間** | 60-80分 | 60-90分 | **大幅短縮 (例: 61分)** |
+| **コスト** | 高い | 極めて低い | **中程度（効率化）** |
 | **カバレッジ** | 90-95% | 95%+ | **95%（品質モード）** |
-| **Q/A品質** | 非常に高い | 高い | **非常に高い** |
+| **Q/A品質** | 非常に高い | 高い | **非常に高い（効率的）** |
 
 ---
 
@@ -82,11 +84,12 @@ python a10_qa_optimized_hybrid_batch.py \
 │                              │                                  │
 │                              ▼                                  │
 │  [2] バッチ生成器初期化                                          │
-│      BatchHybridQAGenerator(model, batch_size, quality_mode)    │
+│      BatchHybridQAGenerator(model="gemini-2.0-flash", ...)    │
 │                              │                                  │
 │                              ▼                                  │
 │  [3] バッチ処理Q/A生成                                           │
 │      generator.generate_batch_hybrid_qa()                       │
+│      (LLMとEmbeddingにGemini APIを利用)                         │
 │                              │                                  │
 │                              ▼                                  │
 │  [4] 結果保存                                                    │
@@ -107,11 +110,11 @@ from tqdm import tqdm
 
 #### BatchHybridQAGenerator
 
-バッチ処理でQ/A生成を行うメインクラス:
+`BatchHybridQAGenerator` は、`UnifiedLLMClient` を介してGemini LLM (`gemini-2.0-flash` など) と `gemini-embedding-001` を使用し、バッチ処理でQ/A生成を行うメインクラスです。
 
 ```python
 generator = BatchHybridQAGenerator(
-    model=model,
+    model=model, # 例: "gemini-2.0-flash"
     batch_size=batch_size,
     embedding_batch_size=embedding_batch_size,
     quality_mode=quality_mode,
@@ -131,10 +134,10 @@ batch_results = generator.generate_batch_hybrid_qa(
 
 #### OptimizedHybridQAGenerator
 
-通常版（個別処理）のQ/A生成クラス（比較実行モードで使用）:
+通常版（個別処理）のQ/A生成クラスで、比較実行モードで使用されます。こちらも内部で`UnifiedLLMClient`を利用します。
 
 ```python
-normal_generator = OptimizedHybridQAGenerator(model=model)
+normal_generator = OptimizedHybridQAGenerator(model=model) # 例: "gemini-2.0-flash"
 
 result = normal_generator.generate_hybrid_qa(
     text=text,
@@ -210,28 +213,18 @@ DATASET_CONFIGS = {
 |------------|---------|---------|---------|---------|
 | 5 | 80% | **品質最優先** | 高精度、エラー少ない | やや低速 |
 | 10 | 90% | **推奨設定** | 速度と品質のバランス | - |
-| 15 | 93% | 大規模データ | 高速 | エラー時の影響大 |
+| 15 | 93% | 大規模データ | 高速 | プロンプトが長大化 |
 | 20 | 95% | 超大規模データ | 最高速 | プロンプトが長大化 |
 
 #### 埋め込みバッチサイズ（--embedding-batch-size）
 
+Gemini `gemini-embedding-001` は、100トークンあたりのコストが非常に低く、効率的なバッチ処理が可能です。
+
 | バッチサイズ | 処理速度 | 推奨用途 |
 |------------|---------|---------|
-| 100 | 標準（デフォルト） | 小規模データ |
+| 100 | 標準（デフォルト） | 中規模データ |
 | 300 | 高速 | **推奨設定** |
 | 500 | 最高速 | 大規模データ |
-
-### 4.2 バッチ処理のAPI削減効果
-
-**例**: CC-News 497文書を処理する場合
-
-| 処理方式 | API呼び出し回数 | 削減率 | 実行時間 |
-|---------|----------------|--------|---------|
-| 逐次処理（従来） | 1,491回 | 0% | 約150分 |
-| バッチサイズ5 | 220回 | 85% | 約75分 |
-| **バッチサイズ10** | **110回** | **92.6%** | **約61分** |
-| バッチサイズ15 | 73回 | 95% | 約50分 |
-| バッチサイズ20 | 55回 | 96% | 約40分 |
 
 ### 4.3 バッチ統計情報
 
@@ -254,13 +247,14 @@ DATASET_CONFIGS = {
 
 ### 5.1 品質重視モードとは
 
-`--quality-mode`を指定すると、カバレッジ95%を目標とした高品質Q/A生成を行います。
+`--quality-mode`を指定すると、`gemini-embedding-001` を使用したカバレッジ分析に基づき、カバレッジ95%を目標とした高品質Q/A生成を行います。
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset cc_news \
-    --quality-mode \
-    --target-coverage 0.95
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset cc_news 
+    --quality-mode 
+    --target-coverage 0.95 
+    --model gemini-2.0-flash
 ```
 
 ### 5.2 通常モードとの違い
@@ -293,10 +287,11 @@ python a10_qa_optimized_hybrid_batch.py \
 ### 6.1 キャッシュの有効化
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset cc_news \
-    --use-cache \
-    --cache-dir qa_cache
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset cc_news 
+    --use-cache 
+    --cache-dir qa_cache 
+    --model gemini-2.0-flash
 ```
 
 ### 6.2 キャッシュの効果
@@ -324,15 +319,16 @@ qa_cache/
 通常版（個別処理）とバッチ版の性能を比較します:
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset cc_news \
-    --compare \
-    --compare-size 10
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset cc_news 
+    --compare 
+    --compare-size 10 
+    --model gemini-2.0-flash
 ```
 
 ### 7.2 比較結果の出力
 
-```
+```bash
 ================================================================================
 📊 性能比較結果
 ================================================================================
@@ -370,14 +366,14 @@ qa_output/comparison_cc_news_20251127_143052.json
 | オプション | 型 | デフォルト | 説明 |
 |-----------|---|----------|------|
 | `--dataset` | str | cc_news | データセットタイプ |
-| `--model` | str | gpt-5-mini | 使用するLLMモデル |
+| `--model` | str | **`gemini-2.0-flash`** | 使用するLLMモデル |
 | `--batch-size` | int | 10 | LLMバッチサイズ |
 | `--embedding-batch-size` | int | 100 | 埋め込みバッチサイズ |
 | `--max-docs` | int | None | 処理する最大文書数 |
 | `--qa-count` | int | None | 文書あたりのQ/A数 |
 | `--doc-type` | str | None | 文書タイプ（news/technical/academic/auto） |
 | `--no-llm` | flag | False | LLMを使用しない |
-| `--no-coverage` | flag | False | カバレージ計算を行わない |
+| `--no-coverage` | flag | False | カバレッジ計算を行わない |
 | `--output` | str | qa_output | 出力ディレクトリ |
 | `--compare` | flag | False | 通常版との比較実行 |
 | `--compare-size` | int | 10 | 比較実行のサンプルサイズ |
@@ -396,42 +392,42 @@ qa_output/comparison_cc_news_20251127_143052.json
 ### 9.1 基本実行
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py --dataset cc_news
+python a10_qa_optimized_hybrid_batch.py --dataset cc_news --model gemini-2.0-flash
 ```
 
 ### 9.2 品質重視モード（推奨）
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset cc_news \
-    --model gpt-5-mini \
-    --quality-mode \
-    --target-coverage 0.95 \
-    --batch-size 10 \
-    --embedding-batch-size 300 \
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset cc_news 
+    --model gemini-2.0-flash 
+    --quality-mode 
+    --target-coverage 0.95 
+    --batch-size 10 
+    --embedding-batch-size 300 
     --output qa_output
 ```
 
 ### 9.3 キャッシュ活用版（2回目以降）
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset cc_news \
-    --model gpt-5-mini \
-    --quality-mode \
-    --use-cache \
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset cc_news 
+    --model gemini-2.0-flash 
+    --quality-mode 
+    --use-cache 
     --cache-dir qa_cache
 ```
 
 ### 9.4 段階的品質向上版
 
 ```bash
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset cc_news \
-    --model gpt-5-mini \
-    --progressive-quality \
-    --initial-coverage 0.85 \
-    --final-coverage 0.95 \
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset cc_news 
+    --model gemini-2.0-flash 
+    --progressive-quality 
+    --initial-coverage 0.85 
+    --final-coverage 0.95 
     --batch-size 15
 ```
 
@@ -439,16 +435,17 @@ python a10_qa_optimized_hybrid_batch.py \
 
 ```bash
 # Wikipedia日本語版
-python a10_qa_optimized_hybrid_batch.py --dataset wikipedia_ja
+python a10_qa_optimized_hybrid_batch.py --dataset wikipedia_ja --model gemini-2.0-flash
 
 # Livedoorニュースコーパス
-python a10_qa_optimized_hybrid_batch.py \
-    --dataset livedoor \
-    --quality-mode \
-    --max-docs 500 \
-    --batch-size 20 \
-    --embedding-batch-size 500 \
-    --use-cache \
+python a10_qa_optimized_hybrid_batch.py 
+    --dataset livedoor 
+    --model gemini-2.0-flash 
+    --quality-mode 
+    --max-docs 500 
+    --batch-size 20 
+    --embedding-batch-size 500 
+    --use-cache 
     --cache-dir qa_cache_livedoor
 ```
 
@@ -472,7 +469,7 @@ qa_output/
 {
   "dataset_type": "cc_news",
   "dataset_name": "CC-News英語ニュース",
-  "model_used": "gpt-5-mini",
+  "model_used": "gemini-2.0-flash",
   "batch_processing": true,
   "batch_sizes": {
     "llm_batch_size": 10,
@@ -487,7 +484,7 @@ qa_output/
     "docs_per_second": 0.135
   },
   "api_usage": {
-    "total_cost": 0.18,
+    "total_cost": 0.18, 
     "cost_per_doc": 0.00036,
     "batch_statistics": {
       "total_llm_calls": 110,
@@ -528,9 +525,9 @@ How does it work?,It uses...
 
 | データセット | 文書数 | バッチサイズ | 実行時間 | コスト | カバレッジ |
 |------------|--------|------------|---------|--------|----------|
-| cc_news | 497 | 10 | 61分 | $0.18 | 95% |
-| livedoor | 500 | 20 | 30-50分 | $0.15 | 95% |
-| livedoor（キャッシュ） | 500 | 20 | 15-25分 | $0.08 | 95% |
+| cc_news | 497 | 10 | 61分 | **低** | 95% |
+| livedoor | 500 | 20 | 30-50分 | **低** | 95% |
+| livedoor（キャッシュ） | 500 | 20 | 15-25分 | **極低** | 95% |
 
 ### 11.2 バッチ処理の効果
 
@@ -557,11 +554,11 @@ How does it work?,It uses...
 
 ### 12.1 APIキーエラー
 
-**症状**: `OpenAI APIキーが設定されていません`
+**症状**: `Google APIキーが設定されていません`
 
 **解決策**:
 ```bash
-echo "OPENAI_API_KEY=your-api-key-here" > .env
+echo "GOOGLE_API_KEY=your-api-key-here" > .env
 ```
 
 ### 12.2 ファイルが見つからない
@@ -575,12 +572,15 @@ ls OUTPUT/preprocessed_cc_news.csv
 
 ### 12.3 レート制限エラー
 
-**症状**: `RateLimitError: API rate limit exceeded`
+**症状**: `Resource Exhausted` (Gemini APIの場合) または `RateLimitError`
 
 **解決策**:
 ```bash
-# バッチサイズを小さくする
+# LLMバッチサイズを小さくする
 --batch-size 5
+
+# 埋め込みバッチサイズを小さくする (helper_embedding.pyの設定を確認)
+--embedding-batch-size 50
 ```
 
 ### 12.4 カバレッジが目標に達しない
@@ -590,8 +590,11 @@ ls OUTPUT/preprocessed_cc_news.csv
 # 方法1: 品質重視モードを使用
 --quality-mode
 
-# 方法2: バッチサイズを小さくする
+# 方法2: LLMバッチサイズを小さくする（品質向上を優先）
 --batch-size 5
+
+# 方法3: 埋め込みバッチサイズを調整する (helper_embedding.pyの設定を確認)
+--embedding-batch-size 50
 ```
 
 ### 12.5 MeCabが利用できない
@@ -620,7 +623,7 @@ pip install mecab-python3
 バッチ処理版ハイブリッドQ&A生成
 =====================================
 データセット: CC-News英語ニュース
-モデル: gpt-5-mini
+モデル: gemini-2.0-flash
 バッチサイズ: LLM=10, 埋め込み=300
 出力先: qa_output
 最大文書数: 制限なし
@@ -663,7 +666,7 @@ API使用状況:
 - 最大: 99.0%
 
 保存ファイル:
-- サマリー: qa_output/a10/batch_summary_cc_news_gpt_5_mini_b10_20251127_153119.json
-- Q/A CSV: qa_output/a10/batch_qa_pairs_cc_news_gpt_5_mini_b10_20251127_153119.csv
+- サマリー: qa_output/a10/batch_summary_cc_news_gemini_2_0_flash_b10_20251127_153119.json
+- Q/A CSV: qa_output/a10/batch_qa_pairs_cc_news_gemini_2_0_flash_b10_20251127_153119.csv
 - 統一フォーマット: qa_output/a10_qa_pairs_cc_news.csv
 ```

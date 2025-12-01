@@ -1,0 +1,105 @@
+{
+  "coverage_rate": 1.0,
+  "covered_chunks": 8,
+  "total_chunks": 8,
+  "uncovered_chunks": [],
+  "max_similarities": [
+    0.889843800057786,
+    0.8797930421829023,
+    0.8630141161153206,
+    0.875373842000701,
+    0.8993536320716929,
+    0.7772815010102839,
+    0.8186647287140101,
+    0.7716228521657578
+  ],
+  "threshold": 0.58,
+  "multi_threshold": {
+    "strict": {
+      "threshold": 0.8,
+      "covered_chunks": 6,
+      "coverage_rate": 0.75,
+      "uncovered_count": 2,
+      "uncovered_chunks": [
+        {
+          "chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+          "similarity": 0.7772815010102839,
+          "gap": 0.022718498989716118
+        },
+        {
+          "chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+          "similarity": 0.7716228521657578,
+          "gap": 0.028377147834242278
+        }
+      ]
+    },
+    "standard": {
+      "threshold": 0.7,
+      "covered_chunks": 8,
+      "coverage_rate": 1.0,
+      "uncovered_count": 0,
+      "uncovered_chunks": []
+    },
+    "lenient": {
+      "threshold": 0.6,
+      "covered_chunks": 8,
+      "coverage_rate": 1.0,
+      "uncovered_count": 0,
+      "uncovered_chunks": []
+    }
+  },
+  "chunk_analysis": {
+    "by_length": {
+      "long": {
+        "count": 6,
+        "covered": 6,
+        "avg_similarity": 0.8394265927004053,
+        "coverage_rate": 1.0
+      },
+      "medium": {
+        "count": 1,
+        "covered": 1,
+        "avg_similarity": 0.8630141161153206,
+        "coverage_rate": 1.0
+      },
+      "short": {
+        "count": 1,
+        "covered": 1,
+        "avg_similarity": 0.875373842000701,
+        "coverage_rate": 1.0
+      }
+    },
+    "by_position": {
+      "beginning": {
+        "count": 3,
+        "covered": 3,
+        "avg_similarity": 0.8775503194520029,
+        "coverage_rate": 1.0
+      },
+      "middle": {
+        "count": 3,
+        "covered": 3,
+        "avg_similarity": 0.8506696583608927,
+        "coverage_rate": 1.0
+      },
+      "end": {
+        "count": 2,
+        "covered": 2,
+        "avg_similarity": 0.7951437904398839,
+        "coverage_rate": 1.0
+      }
+    },
+    "summary": {
+      "total_chunks": 8,
+      "total_qa_pairs": 47,
+      "threshold_used": 0.58,
+      "insights": []
+    }
+  },
+  "dataset_type": "cc_news",
+  "optimal_thresholds": {
+    "strict": 0.8,
+    "standard": 0.7,
+    "lenient": 0.6
+  }
+}

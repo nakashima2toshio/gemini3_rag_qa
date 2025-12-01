@@ -2,24 +2,10 @@
 LLMクライアント抽象化レイヤー
 
 OpenAI API と Gemini 3 API の両方に対応する統一インターフェースを提供。
-
-使用例:
-    from helper_llm import create_llm_client
-
-    # Geminiクライアント
-    llm = create_llm_client(provider="gemini")
-    response = llm.generate_content("Hello")
-
-    # 構造化出力
-    from pydantic import BaseModel
-    class MyResponse(BaseModel):
-        answer: str
-
-    result = llm.generate_structured("質問", MyResponse)
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Optional, Type
+from typing import Any, Optional, Type, List, Dict
 import os
 import json
 import logging
@@ -27,361 +13,179 @@ import logging
 from pydantic import BaseModel
 from dotenv import load_dotenv
 
-# SDK imports (モジュールレベルでインポート - モック対象)
-from openai import OpenAI
-from google import genai
+# SDK imports
+try:
+    from openai import OpenAI
+except ImportError:
+    OpenAI = None
+
+try:
+    import google.generativeai as genai
+    from google.api_core import exceptions
+except ImportError:
+    genai = None
+
 import tiktoken
 
 load_dotenv()
 
 logger = logging.getLogger(__name__)
 
+# --- LLM モデル設定 --- #
+LLM_MODELS = [
+    "gemini-2.0-flash",
+    "gemini-2.0-pro",
+    "gemini-1.5-pro-latest",
+    "gemini-1.5-flash-latest",
+    "gpt-4o-mini",
+    "gpt-4o",
+]
+
+LLM_PRICING = {
+    "gemini-2.0-flash": {"input": 0.0001, "output": 0.0002},
+    "gemini-2.0-pro": {"input": 0.002, "output": 0.004},
+    "gemini-1.5-pro-latest": {"input": 0.0035, "output": 0.0105},
+    "gemini-1.5-flash-latest": {"input": 0.00035, "output": 0.00105},
+    "gpt-4o-mini": {"input": 0.00015, "output": 0.0006},
+    "gpt-4o": {"input": 0.005, "output": 0.015},
+}
+
+LLM_LIMITS = {
+    "gemini-2.0-flash": {"max_tokens": 1048576, "max_output": 8192},
+    "gemini-2.0-pro": {"max_tokens": 1048576, "max_output": 8192},
+    "gpt-4o-mini": {"max_tokens": 128000, "max_output": 4096},
+    "gpt-4o": {"max_tokens": 128000, "max_output": 4096},
+}
+
+# --- Embedding モデル設定 --- #
+EMBEDDING_MODELS = [
+    "gemini-embedding-001",
+    "text-embedding-3-small",
+    "text-embedding-3-large",
+]
+
+EMBEDDING_PRICING = {
+    "gemini-embedding-001": 0.0001,
+    "text-embedding-3-small": 0.00002,
+    "text-embedding-3-large": 0.00013,
+}
+
+EMBEDDING_DIMS = {
+    "gemini-embedding-001": 768,
+    "text-embedding-3-small": 1536,
+    "text-embedding-3-large": 3072,
+}
+
+DEFAULT_LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
+
 
 class LLMClient(ABC):
-    """LLMクライアント抽象基底クラス"""
-
     @abstractmethod
-    def generate_content(
-        self,
-        prompt: str,
-        model: Optional[str] = None,
-        system_instruction: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_output_tokens: Optional[int] = None,
-        **kwargs
-    ) -> str:
-        """
-        テキスト生成
-
-        Args:
-            prompt: 入力プロンプト
-            model: 使用モデル（Noneの場合はデフォルト）
-            system_instruction: システム指示
-            temperature: 温度パラメータ
-            max_output_tokens: 最大出力トークン数
-
-        Returns:
-            生成されたテキスト
-        """
+    def generate_content(self, prompt: str, model: Optional[str] = None, **kwargs) -> str:
         pass
 
     @abstractmethod
-    def generate_structured(
-        self,
-        prompt: str,
-        response_schema: Type[BaseModel],
-        model: Optional[str] = None,
-        system_instruction: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_output_tokens: Optional[int] = None,
-        **kwargs
-    ) -> BaseModel:
-        """
-        構造化出力生成
-
-        Args:
-            prompt: 入力プロンプト
-            response_schema: 出力スキーマ（Pydanticモデル）
-            model: 使用モデル
-            system_instruction: システム指示
-            temperature: 温度パラメータ
-            max_output_tokens: 最大出力トークン数
-
-        Returns:
-            パースされたPydanticモデルインスタンス
-        """
+    def generate_structured(self, prompt: str, response_schema: Type[BaseModel], model: Optional[str] = None, **kwargs) -> BaseModel:
         pass
 
     @abstractmethod
     def count_tokens(self, text: str, model: Optional[str] = None) -> int:
-        """
-        トークン数をカウント
-
-        Args:
-            text: カウント対象のテキスト
-            model: 使用モデル
-
-        Returns:
-            トークン数
-        """
         pass
 
 
 class OpenAIClient(LLMClient):
-    """OpenAI API実装（既存互換用）"""
-
-    def __init__(
-        self,
-        api_key: Optional[str] = None,
-        default_model: str = "gpt-4o-mini"
-    ):
-        """
-        Args:
-            api_key: OpenAI APIキー（Noneの場合は環境変数から取得）
-            default_model: デフォルトモデル
-        """
+    def __init__(self, api_key: Optional[str] = None, default_model: str = "gpt-4o-mini"):
+        if not OpenAI:
+            raise ImportError("openai package is not installed.")
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
-            raise ValueError("OPENAI_API_KEY が設定されていません")
-
+            raise ValueError("OPENAI_API_KEY is not set")
         self.client = OpenAI(api_key=self.api_key)
         self.default_model = default_model
 
-    def generate_content(
-        self,
-        prompt: str,
-        model: Optional[str] = None,
-        system_instruction: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_output_tokens: Optional[int] = None,
-        **kwargs
-    ) -> str:
-        """テキスト生成（OpenAI Responses API）"""
+    def generate_content(self, prompt: str, model: Optional[str] = None, **kwargs) -> str:
         model = model or self.default_model
+        messages = [{"role": "user", "content": prompt}]
+        response = self.client.chat.completions.create(model=model, messages=messages, **kwargs)
+        return response.choices[0].message.content
 
-        messages = []
-        if system_instruction:
-            messages.append({"role": "developer", "content": system_instruction})
-        messages.append({"role": "user", "content": prompt})
-
-        params: dict[str, Any] = {
-            "model": model,
-            "input": messages,
-        }
-        if max_output_tokens:
-            params["max_output_tokens"] = max_output_tokens
-        if temperature is not None:
-            params["temperature"] = temperature
-
-        response = self.client.responses.create(**params)
-        return response.output_text
-
-    def generate_structured(
-        self,
-        prompt: str,
-        response_schema: Type[BaseModel],
-        model: Optional[str] = None,
-        system_instruction: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_output_tokens: Optional[int] = None,
-        **kwargs
-    ) -> BaseModel:
-        """構造化出力生成（OpenAI Structured Outputs）"""
+    def generate_structured(self, prompt: str, response_schema: Type[BaseModel], model: Optional[str] = None, **kwargs) -> BaseModel:
         model = model or self.default_model
-
-        messages = []
-        if system_instruction:
-            messages.append({"role": "developer", "content": system_instruction})
-        messages.append({"role": "user", "content": prompt})
-
-        params: dict[str, Any] = {
-            "model": model,
-            "input": messages,
-            "text_format": response_schema,
-        }
-        if max_output_tokens:
-            params["max_output_tokens"] = max_output_tokens
-        if temperature is not None:
-            params["temperature"] = temperature
-
-        response = self.client.responses.parse(**params)
-        return response.output_parsed
+        messages = [{"role": "user", "content": prompt}]
+        response = self.client.beta.chat.completions.parse(
+            model=model,
+            messages=messages,
+            response_format=response_schema,
+            **kwargs
+        )
+        return response.choices[0].message.parsed
 
     def count_tokens(self, text: str, model: Optional[str] = None) -> int:
-        """トークン数をカウント（tiktoken使用）"""
         model = model or self.default_model
         try:
             encoding = tiktoken.encoding_for_model(model)
         except KeyError:
             encoding = tiktoken.get_encoding("cl100k_base")
-
         return len(encoding.encode(text))
 
 
 class GeminiClient(LLMClient):
-    """Gemini 3 API実装"""
-
-    def __init__(
-        self,
-        api_key: Optional[str] = None,
-        default_model: str = "gemini-2.0-flash",
-        thinking_level: str = "low"
-    ):
-        """
-        Args:
-            api_key: Gemini APIキー（Noneの場合は環境変数から取得）
-            default_model: デフォルトモデル
-            thinking_level: 思考レベル ("low" or "high")
-        """
+    def __init__(self, api_key: Optional[str] = None, default_model: str = "gemini-2.0-flash"):
+        if not genai:
+            raise ImportError("google-generativeai package is not installed.")
         self.api_key = api_key or os.getenv("GOOGLE_API_KEY")
         if not self.api_key:
-            raise ValueError("GOOGLE_API_KEY が設定されていません")
-
-        self.client = genai.Client(api_key=self.api_key)
+            raise ValueError("GOOGLE_API_KEY is not set")
+        genai.configure(api_key=self.api_key)
         self.default_model = default_model
-        self.thinking_level = thinking_level
 
-    def generate_content(
-        self,
-        prompt: str,
-        model: Optional[str] = None,
-        system_instruction: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_output_tokens: Optional[int] = None,
-        thinking_level: Optional[str] = None,
-        **kwargs
-    ) -> str:
-        """テキスト生成（Gemini generate_content）"""
-        model = model or self.default_model
-        thinking = thinking_level or self.thinking_level
-
-        config: dict[str, Any] = {}
-        if system_instruction:
-            config["system_instruction"] = system_instruction
-        if temperature is not None:
-            config["temperature"] = temperature
-        if max_output_tokens:
-            config["max_output_tokens"] = max_output_tokens
-
-        # Gemini 3 の思考レベル設定（gemini-3モデルのみ）
-        if "gemini-3" in model:
-            config["thinking_level"] = thinking
-
-        response = self.client.models.generate_content(
-            model=model,
-            contents=prompt,
-            config=config if config else None
-        )
-
+    def generate_content(self, prompt: str, model: Optional[str] = None, **kwargs) -> str:
+        model_name = model or self.default_model
+        model = genai.GenerativeModel(model_name)
+        response = model.generate_content(prompt, **kwargs)
         return response.text
 
-    def generate_structured(
-        self,
-        prompt: str,
-        response_schema: Type[BaseModel],
-        model: Optional[str] = None,
-        system_instruction: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_output_tokens: Optional[int] = None,
-        thinking_level: Optional[str] = None,
-        **kwargs
-    ) -> BaseModel:
-        """
-        構造化出力生成（Gemini JSON Schema）
-
-        Pydanticモデルからスキーマを生成し、JSONレスポンスをパース
-        """
-        model = model or self.default_model
-        thinking = thinking_level or self.thinking_level
-
-        config: dict[str, Any] = {
-            "response_mime_type": "application/json",
-            "response_schema": response_schema,
-        }
-        if system_instruction:
-            config["system_instruction"] = system_instruction
-        if temperature is not None:
-            config["temperature"] = temperature
-        if max_output_tokens:
-            config["max_output_tokens"] = max_output_tokens
-
-        # Gemini 3 の思考レベル設定
-        if "gemini-3" in model:
-            config["thinking_level"] = thinking
-
-        response = self.client.models.generate_content(
-            model=model,
-            contents=prompt,
-            config=config
-        )
-
-        # JSONをパースしてPydanticモデルに変換
+    def generate_structured(self, prompt: str, response_schema: Type[BaseModel], model: Optional[str] = None, **kwargs) -> BaseModel:
+        model_name = model or self.default_model
+        model = genai.GenerativeModel(model_name)
+        
+        # Gemini JSON mode
+        generation_config = {"response_mime_type": "application/json"}
+        # スキーマをプロンプトに追加する簡易実装（SDKの進化に合わせて変更可能）
+        schema_prompt = f"{prompt}\n\nOutput in JSON format following this schema: {response_schema.model_json_schema()}"
+        
+        response = model.generate_content(schema_prompt, generation_config=generation_config, **kwargs)
         try:
-            data = json.loads(response.text)
-            return response_schema(**data)
-        except json.JSONDecodeError as e:
+            return response_schema.model_validate_json(response.text)
+        except Exception as e:
             logger.error(f"JSON parse error: {e}")
-            logger.error(f"Raw response: {response.text}")
-            raise ValueError(f"構造化出力のパースに失敗: {e}")
+            raise
 
     def count_tokens(self, text: str, model: Optional[str] = None) -> int:
-        """
-        トークン数をカウント（Gemini count_tokens API）
+        model_name = model or self.default_model
+        model = genai.GenerativeModel(model_name)
+        return model.count_tokens(text).total_tokens
 
-        Note: Gemini APIのcount_tokensを使用
-        """
-        model = model or self.default_model
-
-        response = self.client.models.count_tokens(
-            model=model,
-            contents=text
-        )
-        return response.total_tokens
-
-
-def create_llm_client(
-    provider: str = "gemini",
-    **kwargs
-) -> LLMClient:
-    """
-    LLMクライアントのファクトリ関数
-
-    Args:
-        provider: "openai" or "gemini"
-        **kwargs: クライアント初期化パラメータ
-
-    Returns:
-        LLMClientインスタンス
-
-    Example:
-        # Geminiクライアント
-        llm = create_llm_client("gemini")
-
-        # OpenAIクライアント
-        llm = create_llm_client("openai", default_model="gpt-4o")
-    """
-    if provider.lower() == "openai":
+def create_llm_client(provider: str = "gemini", **kwargs) -> LLMClient:
+    if provider == "openai":
         return OpenAIClient(**kwargs)
-    elif provider.lower() == "gemini":
-        return GeminiClient(**kwargs)
-    else:
-        raise ValueError(f"Unknown provider: {provider}. Use 'openai' or 'gemini'")
+    return GeminiClient(**kwargs)
 
+# Helper functions
+def get_available_llm_models() -> List[str]:
+    return LLM_MODELS
 
-# デフォルトプロバイダー設定（config.ymlから読み込む予定）
-DEFAULT_LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")
+def get_llm_model_pricing(model_name: str) -> Dict[str, float]:
+    return LLM_PRICING.get(model_name, {"input": 0.0, "output": 0.0})
 
+def get_llm_model_limits(model_name: str) -> Dict[str, int]:
+    return LLM_LIMITS.get(model_name, {"max_tokens": 0, "max_output": 0})
 
-def get_default_llm_client(**kwargs) -> LLMClient:
-    """デフォルト設定でLLMクライアントを取得"""
-    return create_llm_client(DEFAULT_LLM_PROVIDER, **kwargs)
+def get_available_embedding_models() -> List[str]:
+    return EMBEDDING_MODELS
 
+def get_embedding_model_pricing(model_name: str) -> float:
+    return EMBEDDING_PRICING.get(model_name, 0.0)
 
-if __name__ == "__main__":
-    # 簡易テスト
-    print("LLMClient テスト")
-    print("=" * 40)
-
-    try:
-        # Geminiクライアントテスト
-        print("\n[Gemini Client Test]")
-        gemini = create_llm_client("gemini")
-        result = gemini.generate_content("こんにちは")
-        print(f"Response: {result[:100]}...")
-
-        # トークンカウント
-        tokens = gemini.count_tokens("これはテストです")
-        print(f"Token count: {tokens}")
-
-    except Exception as e:
-        print(f"Gemini Error: {e}")
-
-    try:
-        # OpenAIクライアントテスト
-        print("\n[OpenAI Client Test]")
-        openai_client = create_llm_client("openai")
-        result = openai_client.generate_content("こんにちは")
-        print(f"Response: {result[:100]}...")
-
-    except Exception as e:
-        print(f"OpenAI Error: {e}")
+def get_embedding_model_dimensions(model_name: str) -> int:
+    return EMBEDDING_DIMS.get(model_name, 0)

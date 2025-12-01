@@ -1,0 +1,472 @@
+[
+  {
+    "question": "What is surprising about Regina Willoughby's last season with Columbia City Ballet?",
+    "answer": "Her 18-year-old daughter, Melina, is also starting her first season with the company.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_0_Daughter Duo is Dancing in The_chunk_0",
+    "doc_id": "cc_news_0_Daughter Duo is Dancing in The",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "How old is Regina Willoughby?",
+    "answer": "Regina Willoughby is 40 years old.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_0_Daughter Duo is Dancing in The_chunk_0",
+    "doc_id": "cc_news_0_Daughter Duo is Dancing in The",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "When will Regina Willoughby retire from the stage?",
+    "answer": "Regina Willoughby will retire in March.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_0_Daughter Duo is Dancing in The_chunk_0",
+    "doc_id": "cc_news_0_Daughter Duo is Dancing in The",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "In what ballet are Regina and Melina dancing together?",
+    "answer": "Regina and Melina are dancing together in The Nutcracker.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_0_Daughter Duo is Dancing in The_chunk_0",
+    "doc_id": "cc_news_0_Daughter Duo is Dancing in The",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What roles do Regina and Melina have in The Nutcracker?",
+    "answer": "Regina is performing as the Snow Queen, while Melina is in the snow corps and they are both in the Arabian divertissement.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_0_Daughter Duo is Dancing in The_chunk_0",
+    "doc_id": "cc_news_0_Daughter Duo is Dancing in The",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "How does Regina feel about dancing with her daughter?",
+    "answer": "Regina finds it very surreal to be dancing with her daughter and never thought Melina would take ballet this far.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_0_Daughter Duo is Dancing in The_chunk_0",
+    "doc_id": "cc_news_0_Daughter Duo is Dancing in The",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Why did Peter Martins request a leave of absence?",
+    "answer": "Peter Martins requested a leave of absence due to an internal investigation into sexual harassment accusations aimed at him.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_1_New York City Ballet Announces_chunk_0",
+    "doc_id": "cc_news_1_New York City Ballet Announces",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What is the composition of the interim leadership team for the New York City Ballet?",
+    "answer": "The interim leadership team is composed of Jonathan Stafford, Justin Peck, Craig Hall, and Rebecca Krohn.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_1_New York City Ballet Announces_chunk_0",
+    "doc_id": "cc_news_1_New York City Ballet Announces",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What responsibilities will the interim leadership team handle?",
+    "answer": "The team will be responsible for the day-to-day artistic needs of the company including scheduling, casting, and conducting rehearsals.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_1_New York City Ballet Announces_chunk_0",
+    "doc_id": "cc_news_1_New York City Ballet Announces",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Who leads the interim leadership team?",
+    "answer": "Ballet master and former principal dancer Jonathan Stafford leads the interim leadership team.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_1_New York City Ballet Announces_chunk_0",
+    "doc_id": "cc_news_1_New York City Ballet Announces",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What roles within NYCB have Justin Peck and Craig Hall previously held?",
+    "answer": "Justin Peck is a NYCB resident choreographer and soloist, while Craig Hall is a ballet master and former dancer with the company.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_1_New York City Ballet Announces_chunk_0",
+    "doc_id": "cc_news_1_New York City Ballet Announces",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "How might Rebecca Krohn's recent transition from dancing to a leadership role help the company?",
+    "answer": "Her close familiarity with the company, having recently left the stage, should help to ease the dancers' transition.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_1_New York City Ballet Announces_chunk_0",
+    "doc_id": "cc_news_1_New York City Ballet Announces",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Which two ballet companies participated in Super Bowl-themed performances?",
+    "answer": "Pennsylvania Ballet and Boston Ballet participated in Super Bowl-themed performances to cheer on their region's respective teams.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_2_Watch Pennsylvania Ballet & Bo_chunk_0",
+    "doc_id": "cc_news_2_Watch Pennsylvania Ballet & Bo",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What color were the Pennsylvania Ballet dancers dressed in for their Super Bowl routine?",
+    "answer": "The Pennsylvania Ballet dancers were dressed in Eagles green for their Super Bowl routine.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_2_Watch Pennsylvania Ballet & Bo_chunk_0",
+    "doc_id": "cc_news_2_Watch Pennsylvania Ballet & Bo",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What types of dance moves did the Pennsylvania Ballet perform?",
+    "answer": "The Pennsylvania Ballet performed a fast-paced routine full of fouetté turns, sky-high jumps and some swan arms.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_2_Watch Pennsylvania Ballet & Bo_chunk_0",
+    "doc_id": "cc_news_2_Watch Pennsylvania Ballet & Bo",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Why did Pennsylvania Ballet include swan arms in their routine?",
+    "answer": "Pennsylvania Ballet included swan arms in their routine because they are known as the birds.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_2_Watch Pennsylvania Ballet & Bo_chunk_0",
+    "doc_id": "cc_news_2_Watch Pennsylvania Ballet & Bo",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Which principal dancer from Boston Ballet was featured in their Super Bowl video?",
+    "answer": "Principal dancer Paul Craig and soloist Derek Dunn were featured in Boston Ballet's Super Bowl video.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_2_Watch Pennsylvania Ballet & Bo_chunk_0",
+    "doc_id": "cc_news_2_Watch Pennsylvania Ballet & Bo",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What ballet work did Boston Ballet reference in their Super Bowl performance and what props were used?",
+    "answer": "Boston Ballet referenced Balanchine tricks in their video, and used props from Prodigal Son.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_2_Watch Pennsylvania Ballet & Bo_chunk_0",
+    "doc_id": "cc_news_2_Watch Pennsylvania Ballet & Bo",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What dance shoe collection has Só Dança launched?",
+    "answer": "Só Dança has launched a new collection of dance shoes in collaboration with Broadway Dance Center.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_3_dance shoes_chunk_0",
+    "doc_id": "cc_news_3_dance shoes",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What heel heights are the Só Dança dance shoes offered in?",
+    "answer": "The Só Dança dance shoes are offered in 2.5\" or 3\" heels.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_3_dance shoes_chunk_0",
+    "doc_id": "cc_news_3_dance shoes",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Why are top industry professionals loving the new Só Dança dance shoes?",
+    "answer": "Top industry professionals are loving the shoes because they are versatile and supportive.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_3_dance shoes_chunk_0",
+    "doc_id": "cc_news_3_dance shoes",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "Where was the Só Dança dance shoes collection shot?",
+    "answer": "The dance shoes collection was shot at and in collaboration with Broadway Dance Center.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_3_dance shoes_chunk_0",
+    "doc_id": "cc_news_3_dance shoes",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What design feature of the Só Dança dance shoes helps dancers feel confident and stable?",
+    "answer": "The heel is centered under the body, helping dancers feel confident and stable.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_3_dance shoes_chunk_0",
+    "doc_id": "cc_news_3_dance shoes",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What is Rebecca Krohn best known for?",
+    "answer": "Rebecca Krohn is best known for her flawless execution of classic Balanchine leotard ballets.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_0",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "When did Rebecca Krohn join the New York City Ballet as an apprentice?",
+    "answer": "Rebecca Krohn joined the NYCB as an apprentice in the fall of 1998.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_0",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "When did Rebecca Krohn become a principal dancer?",
+    "answer": "Rebecca Krohn became a principal dancer in 2012.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_0",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What role will Rebecca Krohn take on after retiring as a principal dancer?",
+    "answer": "After retiring as a principal dancer, Rebecca Krohn will become a ballet master at NYCB.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_0",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "At what age did Rebecca Krohn move to New York?",
+    "answer": "Rebecca Krohn moved to New York when she was 14 to train at the School of American Ballet.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_0",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What ballet will Krohn dance on her final Saturday night?",
+    "answer": "Krohn will dance Stravinsky Violin Concerto with Amar Ramasar on her final Saturday night.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_0",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "What Balanchine ballets are mentioned as favorites?",
+    "answer": "Balanchine's Stravinsky Violin Concerto, Movements for Piano and Orchestra, and Agon are mentioned as favorites.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "What is another ballet by Robbins that the speaker mentions enjoying?",
+    "answer": "The speaker mentions enjoying Robbins' Dances at a Gathering.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "What makes sharing the stage with friends so special?",
+    "answer": "Sharing the stage with friends creates an amazing sense of trust and spontaneity, leading to a strong connection.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "How did the speaker's perspective on the company change over the years?",
+    "answer": "As the speaker got older, the company seemed younger, and the speaker wanted to be a supportive figure for the younger dancers.",
+    "question_type": "comparison",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "What did the speaker want to offer the younger dancers?",
+    "answer": "The speaker wanted to offer the younger dancers support and advice.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "What type of ballets did the speaker always love?",
+    "answer": "The speaker always really loved the Balanchine black and white ballets, as well as some Robbins ballets.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_1",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "When did the speaker formally address staying with the company?",
+    "answer": "The speaker formally addressed staying with the company a year ago.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_2",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "What was Peter Martins's reaction to the speaker's desire to stay with the company?",
+    "answer": "Peter Martins thought it was a great idea for the speaker to stay with the company.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_2",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "What is the speaker most looking forward to in their new role?",
+    "answer": "The speaker is most looking forward to nurturing the dancers and their talents and carrying on the amazing ballets with the new dancers for the future.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_2",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "What inspires the speaker about Karin von Aroldingen?",
+    "answer": "Karin von Aroldingen's undying passion for the ballet pieces is incredibly inspiring to the speaker.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_2",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "What talent does Susan Hendl have that inspires the speaker?",
+    "answer": "Susan Hendl has a wonderful talent of drawing out everyone's unique qualities and femininity, which inspires the speaker.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_2",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "Which ballet masters has the speaker connected with?",
+    "answer": "The speaker is very close to Karin von Aroldingen and has also been inspired by Susan Hendl.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_2",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "Besides ballet, what activities does the speaker plan to pursue with more free time?",
+    "answer": "The speaker plans to visit museums more often, indulging in her love for cooking and hosting dinner parties.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "Why did the speaker avoid being on her legs all day on her days off while dancing?",
+    "answer": "The speaker avoided being on her legs all day on her days off because she wanted to rest her legs for dancing.",
+    "question_type": "reason",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "What is the first piece of advice for young dancers?",
+    "answer": "The first piece of advice is that ballet instills discipline, which is an invaluable quality.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "According to the speaker, what is so special about ballet?",
+    "answer": "According to the speaker, the discipline that ballet instills is what's so special about it.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "What is the second piece of advice for young dancers who are just starting out?",
+    "answer": "The second piece of advice is to treat each day as a new start, be positive, and move forward, even on days when you don't feel good or things aren't working well.",
+    "question_type": "fact",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "How should young dancers approach days when they don't feel their best?",
+    "answer": "Young dancers should approach those days as a fresh start, maintaining a positive attitude and continuing to move forward.",
+    "question_type": "application",
+    "source_chunk_id": "cc_news_4_Rebecca Krohn on Her Retiremen_chunk_3",
+    "doc_id": "cc_news_4_Rebecca Krohn on Her Retiremen",
+    "dataset_type": "cc_news",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  }
+]

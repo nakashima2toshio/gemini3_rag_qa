@@ -25,86 +25,14 @@ logger = logging.getLogger(__name__)
 # テキスト処理関数をhelper_text.pyから参照可能にする
 
 # 設定はconfig.pyから参照可能（後方互換性維持）
-try:
-    from config import ModelConfig
-except ImportError:
-    ModelConfig = None
+from helper_llm import create_llm_client, LLMClient, DEFAULT_LLM_PROVIDER
+from helper_embedding import create_embedding_client, EmbeddingClient, DEFAULT_EMBEDDING_PROVIDER, get_embedding_dimensions
+from helper_text import clean_text
 
 
 # ==================================================
 # 設定管理クラス（共通）
 # ==================================================
-class AppConfig:
-    """アプリケーション設定（全アプリ共通）"""
-
-    # 利用可能なモデル
-    AVAILABLE_MODELS = [
-        "gpt-5-mini",
-        "gpt-5-nano",
-        "gpt-5",
-        "gpt-4o",
-        "gpt-4o-mini",
-        "gpt-4o-audio-preview",
-        "gpt-4o-mini-audio-preview",
-        "gpt-4.1",
-        "gpt-4.1-mini",
-        "o1",
-        "o1-mini",
-        "o3",
-        "o3-mini",
-        "o4",
-        "o4-mini"
-    ]
-
-    DEFAULT_MODEL = "gpt-5-mini"
-
-    # モデル料金（1000トークンあたりのドル）
-    MODEL_PRICING = {
-        "gpt-5"                    : {"input": 0.01, "output": 0.03},
-        "gpt-5-mini"               : {"input": 0.0001, "output": 0.0004},
-        "gpt-5-nano"               : {"input": 0.00005, "output": 0.0002},
-        "gpt-4o"                   : {"input": 0.005, "output": 0.015},
-        "gpt-4o-mini"              : {"input": 0.00015, "output": 0.0006},
-        "gpt-4o-audio-preview"     : {"input": 0.01, "output": 0.02},
-        "gpt-4o-mini-audio-preview": {"input": 0.00025, "output": 0.001},
-        "gpt-4.1"                  : {"input": 0.0025, "output": 0.01},
-        "gpt-4.1-mini"             : {"input": 0.0001, "output": 0.0004},
-        "o1"                       : {"input": 0.015, "output": 0.06},
-        "o1-mini"                  : {"input": 0.003, "output": 0.012},
-        "o3"                       : {"input": 0.03, "output": 0.12},
-        "o3-mini"                  : {"input": 0.006, "output": 0.024},
-        "o4"                       : {"input": 0.05, "output": 0.20},
-        "o4-mini"                  : {"input": 0.01, "output": 0.04},
-    }
-
-    # モデル制限
-    MODEL_LIMITS = {
-        "gpt-5"                    : {"max_tokens": 256000, "max_output": 8192},
-        "gpt-5-mini"               : {"max_tokens": 128000, "max_output": 4096},
-        "gpt-5-nano"               : {"max_tokens": 64000, "max_output": 2048},
-        "gpt-4o"                   : {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4o-mini"              : {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4o-audio-preview"     : {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4o-mini-audio-preview": {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4.1"                  : {"max_tokens": 128000, "max_output": 4096},
-        "gpt-4.1-mini"             : {"max_tokens": 128000, "max_output": 4096},
-        "o1"                       : {"max_tokens": 128000, "max_output": 32768},
-        "o1-mini"                  : {"max_tokens": 128000, "max_output": 65536},
-        "o3"                       : {"max_tokens": 200000, "max_output": 100000},
-        "o3-mini"                  : {"max_tokens": 200000, "max_output": 100000},
-        "o4"                       : {"max_tokens": 256000, "max_output": 128000},
-        "o4-mini"                  : {"max_tokens": 256000, "max_output": 128000},
-    }
-
-    @classmethod
-    def get_model_limits(cls, model: str) -> Dict[str, int]:
-        """モデルの制限を取得"""
-        return cls.MODEL_LIMITS.get(model, {"max_tokens": 128000, "max_output": 4096})
-
-    @classmethod
-    def get_model_pricing(cls, model: str) -> Dict[str, float]:
-        """モデルの料金を取得"""
-        return cls.MODEL_PRICING.get(model, {"input": 0.00015, "output": 0.0006})
 
 
 # ==================================================
@@ -199,25 +127,26 @@ class TokenManager:
 
     @staticmethod
     def count_tokens(text: str, model: str = None) -> int:
-        """テキストのトークン数をカウント（簡易推定）"""
+        """テキストのトークン数をカウント（UnifiedLLMClient使用）"""
         if not text:
             return 0
-
-        # 簡易推定: 日本語文字は0.5トークン、英数字は0.25トークン
-        japanese_chars = len([c for c in text if ord(c) > 127])
-        english_chars = len(text) - japanese_chars
-        estimated_tokens = int(japanese_chars * 0.5 + english_chars * 0.25)
-
-        # 最低1トークンは必要
-        return max(1, estimated_tokens)
+        # UnifiedLLMClientを動的に作成してトークン数をカウント
+        # providerはDEFAULT_LLM_PROVIDERから取得
+        llm_client = create_llm_client(default_model=model)
+        return llm_client.count_tokens(text, model=model)
 
     @staticmethod
-    def estimate_cost(input_tokens: int, output_tokens: int, model: str) -> float:
+    def estimate_cost(input_tokens: int, output_tokens: int, model: str, is_embedding: bool = False) -> float:
         """API使用コストの推定"""
-        pricing = AppConfig.get_model_pricing(model)
-        input_cost = (input_tokens / 1000) * pricing["input"]
-        output_cost = (output_tokens / 1000) * pricing["output"]
-        return input_cost + output_cost
+        if is_embedding:
+            pricing_per_1k_tokens = get_embedding_model_pricing(model)
+            cost = (input_tokens / 1000) * pricing_per_1k_tokens
+            return cost
+        else:
+            pricing = get_llm_model_pricing(model)
+            input_cost = (input_tokens / 1000) * pricing["input"]
+            output_cost = (output_tokens / 1000) * pricing["output"]
+            return input_cost + output_cost
 
 
 # ==================================================
@@ -243,8 +172,8 @@ def safe_execute(func):
 # ==================================================
 def select_model(key: str = "model_selection") -> str:
     """モデル選択UI"""
-    models = AppConfig.AVAILABLE_MODELS
-    default_model = AppConfig.DEFAULT_MODEL
+    models = get_available_llm_models()
+    default_model = DEFAULT_LLM_PROVIDER # DEFAULT_LLM_PROVIDERがGeminiのデフォルトモデル名と一致すると仮定
 
     try:
         default_index = models.index(default_model)
@@ -256,7 +185,7 @@ def select_model(key: str = "model_selection") -> str:
         models,
         index=default_index,
         key=key,
-        help="利用するOpenAIモデルを選択してください"
+        help="利用するLLMモデルを選択してください"
     )
 
     return selected
@@ -265,46 +194,45 @@ def select_model(key: str = "model_selection") -> str:
 def show_model_info(selected_model: str) -> None:
     """選択されたモデルの情報を表示"""
     try:
-        limits = AppConfig.get_model_limits(selected_model)
-        pricing = AppConfig.get_model_pricing(selected_model)
+        limits = get_llm_model_limits(selected_model)
+        pricing = get_llm_model_pricing(selected_model)
 
         with st.sidebar.expander("📊 選択モデル情報", expanded=False):
             # 基本情報
             col1, col2 = st.columns(2)
             with col1:
                 st.write("**最大入力**")
-                st.write(f"{limits['max_tokens']:,}")
+                st.write(f"{limits.get('max_tokens', 0):,}")
             with col2:
                 st.write("**最大出力**")
-                st.write(f"{limits['max_output']:,}")
+                st.write(f"{limits.get('max_output', 0):,}")
 
             # 料金情報
             st.write("**料金（1000トークン）**")
-            st.write(f"- 入力: ${pricing['input']:.5f}")
-            st.write(f"- 出力: ${pricing['output']:.5f}")
+            st.write(f"- 入力: ${pricing.get('input', 0.0):.5f}")
+            st.write(f"- 出力: ${pricing.get('output', 0.0):.5f}")
 
-            # モデル特性
-            if selected_model.startswith("o"):
-                st.info("🧠 推論特化モデル")
-                st.caption("高度な推論タスクに最適化")
-            elif "audio" in selected_model:
-                st.info("🎵 音声対応モデル")
-                st.caption("音声入力・出力に対応")
-            elif "gpt-4o" in selected_model:
-                st.info("👁️ マルチモーダルモデル")
-                st.caption("テキスト・画像の理解が可能")
+            # モデル特性（Geminiに特化）
+            if "gemini-2.0" in selected_model:
+                st.info("✨ Gemini 2.0 シリーズ")
+                st.caption("高速・高性能な次世代モデル")
+            elif "gemini-1.5" in selected_model:
+                st.info("💡 Gemini 1.5 シリーズ")
+                st.caption("長文コンテキスト・マルチモーダル対応")
+            elif "gpt" in selected_model:
+                st.info("⚙️ OpenAI互換モデル")
+                st.caption("OpenAI APIを介して利用可能")
             else:
-                st.info("💬 標準対話モデル")
-                st.caption("一般的な対話・テキスト処理")
+                st.info("💬 その他のLLMモデル")
 
             # RAG用途での推奨度
             st.write("**RAG用途推奨度**")
-            if selected_model in ["gpt-4o-mini", "gpt-4.1-mini"]:
-                st.success("✅ 最適（コスト効率良好）")
-            elif selected_model in ["gpt-4o", "gpt-4.1"]:
-                st.info("💡 高品質（コスト高）")
-            elif selected_model.startswith("o"):
-                st.warning("⚠️ 推論特化（RAG用途には過剰）")
+            if "flash" in selected_model:
+                st.success("✅ 最適（高速・コスト効率良好）")
+            elif "pro" in selected_model:
+                st.info("💡 高品質（詳細な推論に最適）")
+            elif "gpt" in selected_model:
+                st.info("💬 OpenAI互換（用途に応じて選択）")
             else:
                 st.info("💬 標準的な性能")
 
@@ -324,12 +252,17 @@ def estimate_token_usage(df_processed: pd.DataFrame, selected_model: str) -> Non
 
             if sample_texts:
                 sample_text = " ".join(sample_texts)
+                # TokenManagerのcount_tokensを使用
                 sample_tokens = TokenManager.count_tokens(sample_text, selected_model)
                 sample_chars = len(sample_text)
 
                 if sample_chars > 0:
                     # 全体のトークン数を推定
                     estimated_total_tokens = int((total_chars / sample_chars) * sample_tokens)
+
+                    # Embeddingモデルの料金を取得 (Gemini Embeddingを想定)
+                    embedding_model_name = get_available_embedding_models()[0] # デフォルトのGemini Embeddingモデルを取得
+                    embedding_pricing_per_1k_tokens = get_embedding_model_pricing(embedding_model_name)
 
                     with st.expander("🔢 トークン使用量推定", expanded=False):
                         col1, col2, col3 = st.columns(3)
@@ -339,11 +272,11 @@ def estimate_token_usage(df_processed: pd.DataFrame, selected_model: str) -> Non
                             avg_tokens_per_record = estimated_total_tokens / len(df_processed)
                             st.metric("平均トークン/レコード", f"{avg_tokens_per_record:.0f}")
                         with col3:
-                            # embedding用のコスト推定（参考値）
-                            embedding_cost = (estimated_total_tokens / 1000) * 0.0001
+                            # embedding用のコスト推定
+                            embedding_cost = (estimated_total_tokens / 1000) * embedding_pricing_per_1k_tokens
                             st.metric("推定embedding費用", f"${embedding_cost:.4f}")
 
-                        st.info(f"💡 選択モデル「{selected_model}」での推定値")
+                        st.info(f"💡 選択LLMモデル「{selected_model}」およびEmbeddingモデル「{embedding_model_name}」での推定値")
                         st.caption("※ 実際のトークン数とは異なる場合があります")
 
     except Exception as e:
@@ -700,13 +633,13 @@ def show_usage_instructions(dataset_type: str) -> None:
 
     ### 🎯 RAG最適化の特徴
     - **自然な文章結合**: ラベルなしで読みやすい文章として結合
-    - **OpenAI embedding対応**: text-embedding-ada-002等に最適化
+    - **Gemini Embedding対応**: `gemini-embedding-001`等に最適化
     - **検索性能向上**: 意味的検索の精度向上
 
     ### 💡 推奨モデル
-    - **コスト重視**: gpt-4o-mini, gpt-4.1-mini
-    - **品質重視**: gpt-4o, gpt-4.1
-    - **推論タスク**: o1-mini, o3-mini（RAG用途には過剰）
+    - **コスト重視**: `gemini-2.0-flash`
+    - **品質重視**: `gemini-2.0-pro`
+    - **OpenAI互換**: `gpt-4o-mini`, `gpt-4o` （OpenAI APIキーが必要）
     """
 
     # データセット特有の説明
@@ -785,7 +718,6 @@ def setup_sidebar_header(dataset_type: str) -> None:
 # ==================================================
 __all__ = [
     # 設定クラス
-    'AppConfig',
     'RAGConfig',
     'TokenManager',
 

@@ -1,0 +1,132 @@
+{
+  "coverage_rate": 1.0,
+  "covered_chunks": 30,
+  "total_chunks": 30,
+  "uncovered_chunks": [],
+  "max_similarities": [
+    0.7822681737857105,
+    0.8587927392875627,
+    0.8549004137526798,
+    0.8283837253841506,
+    0.8674800310820523,
+    0.8217909254796613,
+    0.788292454498774,
+    0.7711100569213891,
+    0.7807077517787666,
+    0.8580270327779096,
+    0.8111263125336281,
+    0.8699758785201441,
+    0.8886732670858835,
+    0.8411649655268069,
+    0.7587214825315077,
+    0.7894759135788467,
+    0.8110694310211156,
+    0.751937409495675,
+    0.8129866631210828,
+    0.8415543450506808,
+    0.8754303982181044,
+    0.897175638031904,
+    0.785012921041941,
+    0.8408393454391866,
+    0.8154036378628049,
+    0.848327439519791,
+    0.856324850017888,
+    0.882121653089062,
+    0.8444608594927584,
+    0.8297030427276149
+  ],
+  "threshold": 0.58,
+  "multi_threshold": {
+    "strict": {
+      "threshold": 0.78,
+      "covered_chunks": 27,
+      "coverage_rate": 0.9,
+      "uncovered_count": 3,
+      "uncovered_chunks": [
+        {
+          "chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_2",
+          "similarity": 0.7711100569213891,
+          "gap": 0.008889943078610907
+        },
+        {
+          "chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_2",
+          "similarity": 0.7587214825315077,
+          "gap": 0.021278517468492297
+        },
+        {
+          "chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_5",
+          "similarity": 0.751937409495675,
+          "gap": 0.028062590504325025
+        }
+      ]
+    },
+    "standard": {
+      "threshold": 0.68,
+      "covered_chunks": 30,
+      "coverage_rate": 1.0,
+      "uncovered_count": 0,
+      "uncovered_chunks": []
+    },
+    "lenient": {
+      "threshold": 0.58,
+      "covered_chunks": 30,
+      "coverage_rate": 1.0,
+      "uncovered_count": 0,
+      "uncovered_chunks": []
+    }
+  },
+  "chunk_analysis": {
+    "by_length": {
+      "long": {
+        "count": 27,
+        "covered": 27,
+        "avg_similarity": 0.8253682779116185,
+        "coverage_rate": 1.0
+      },
+      "medium": {
+        "count": 1,
+        "covered": 1,
+        "avg_similarity": 0.8674800310820523,
+        "coverage_rate": 1.0
+      },
+      "short": {
+        "count": 2,
+        "covered": 2,
+        "avg_similarity": 0.8554076119796654,
+        "coverage_rate": 1.0
+      }
+    },
+    "by_position": {
+      "beginning": {
+        "count": 10,
+        "covered": 10,
+        "avg_similarity": 0.8211753304748657,
+        "coverage_rate": 1.0
+      },
+      "middle": {
+        "count": 11,
+        "covered": 11,
+        "avg_similarity": 0.8229196424257704,
+        "coverage_rate": 1.0
+      },
+      "end": {
+        "count": 9,
+        "covered": 9,
+        "avg_similarity": 0.8443743763581056,
+        "coverage_rate": 1.0
+      }
+    },
+    "summary": {
+      "total_chunks": 30,
+      "total_qa_pairs": 148,
+      "threshold_used": 0.58,
+      "insights": []
+    }
+  },
+  "dataset_type": "livedoor",
+  "optimal_thresholds": {
+    "strict": 0.78,
+    "standard": 0.68,
+    "lenient": 0.58
+  }
+}

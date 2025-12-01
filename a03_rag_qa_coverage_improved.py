@@ -79,6 +79,8 @@ from datetime import datetime
 import logging
 import re
 from collections import Counter
+from helper_llm import create_llm_client, LLMClient
+from models import QAPairsResponse
 
 # ログ設定
 logging.basicConfig(
@@ -86,6 +88,58 @@ logging.basicConfig(
     format='%(asctime)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+
+def generate_llm_qa(chunk_text: str, chunk_idx: int, model: str, qa_per_chunk: int = 2) -> List[Dict]:
+    """LLMを使用して高品質なQ/Aペアを生成"""
+    try:
+        client = create_llm_client(provider="gemini")
+        
+        system_prompt = """あなたは教育コンテンツ作成の専門家です。
+与えられたテキストから、深い理解を必要とする高品質なQ&Aペアを生成してください。
+単なる事実確認だけでなく、因果関係、比較、応用などの高度な質問を含めてください。"""
+
+        user_prompt = f"""以下のテキストから{qa_per_chunk}個のQ&Aペアを生成してください。
+
+テキスト:
+{chunk_text}
+
+JSON形式で出力:
+{{
+  "qa_pairs": [
+    {{
+      "question": "質問文",
+      "answer": "回答文",
+      "question_type": "understanding/application"
+    }}
+  ]
+}}"""
+
+        combined_prompt = f"{system_prompt}\n\n{user_prompt}"
+
+        # 構造化出力を使用
+        response = client.generate_structured(
+            prompt=combined_prompt,
+            response_schema=QAPairsResponse,
+            model=model
+        )
+
+        qa_pairs = []
+        for qa in response.qa_pairs:
+            qa_pairs.append({
+                "question": qa.question,
+                "answer": qa.answer,
+                "type": "llm_generated",
+                "question_type": qa.question_type,
+                "chunk_idx": chunk_idx,
+                "generation_method": "llm"
+            })
+            
+        return qa_pairs
+
+    except Exception as e:
+        logger.warning(f"LLM Q/A生成エラー (chunk {chunk_idx}): {e}")
+        return []
 
 
 # ============================================================================
@@ -249,8 +303,6 @@ QUESTION_TYPES_HIERARCHY = {
 # チャンク複雑度分析
 # ============================================================================
 
-import tiktoken
-
 def analyze_chunk_complexity(chunk_text: str, lang: str = "auto") -> Dict:
     """
     チャンクの複雑度を分析して、適切なQ/A生成戦略を決定
@@ -268,12 +320,14 @@ def analyze_chunk_complexity(chunk_text: str, lang: str = "auto") -> Dict:
         japanese_count = sum(1 for char in japanese_indicators if char in chunk_text[:100])
         lang = "ja" if japanese_count > 3 else "en"
 
-    tokenizer = tiktoken.get_encoding("cl100k_base")
+    # UnifiedLLMClientを使用してトークンカウント (Gemini対応)
+    llm_client = create_llm_client(provider="gemini")
+    token_count = llm_client.count_tokens(chunk_text)
 
     # 基本メトリクス
     sentences = chunk_text.split('。' if lang == 'ja' else '.')
     sentences = [s for s in sentences if len(s.strip()) > 5]
-    tokens = tokenizer.encode(chunk_text)
+    # token_countは上で取得済み
 
     # 専門用語の検出
     if lang == 'ja':
@@ -286,10 +340,10 @@ def analyze_chunk_complexity(chunk_text: str, lang: str = "auto") -> Dict:
         technical_terms = re.findall(technical_pattern, chunk_text)
 
     # 文の複雑度（平均文長）
-    avg_sentence_length = len(tokens) / max(len(sentences), 1)
+    avg_sentence_length = token_count / max(len(sentences), 1)
 
     # 概念密度（専門用語の頻度）
-    concept_density = len(technical_terms) / max(len(tokens), 1) * 100
+    concept_density = len(technical_terms) / max(token_count, 1) * 100
 
     # 数値・統計情報の存在
     numeric_pattern = r'\d+\.?\d*%?|\d{1,3}(,\d{3})*'
@@ -328,7 +382,7 @@ def analyze_chunk_complexity(chunk_text: str, lang: str = "auto") -> Dict:
         "avg_sentence_length": avg_sentence_length,
         "concept_density": concept_density,
         "sentence_count": len(sentences),
-        "token_count": len(tokens),
+        "token_count": token_count,
         "has_statistics": has_statistics,
         "numeric_data": numeric_data[:5],
         "lang": lang
@@ -726,8 +780,8 @@ def calculate_improved_coverage(
     # バッチ処理でQ/A埋め込みを生成
     logger.info(f"Q/A埋め込みをバッチ生成中... ({len(qa_texts)}個)")
 
-    # OpenAI APIのバッチサイズ制限を考慮（最大2048）
-    MAX_BATCH_SIZE = 2048
+    # Gemini APIの制限を考慮してバッチサイズを調整
+    MAX_BATCH_SIZE = 100
     qa_embeddings = []
 
     if len(qa_texts) <= MAX_BATCH_SIZE:
@@ -817,7 +871,8 @@ def process_with_improved_methods(
     all_qas = []
 
     # SemanticCoverage初期化（段落優先のセマンティック分割）
-    analyzer = SemanticCoverage(embedding_model="text-embedding-3-small")
+    # Gemini埋め込みモデルを使用するように変更
+    analyzer = SemanticCoverage(embedding_model="gemini-embedding-001")
     chunks = analyzer.create_semantic_chunks(
         document=document_text,
         max_tokens=200,  # チャンクの最大トークン数
@@ -865,10 +920,21 @@ def process_with_improved_methods(
     # LLMベースの手法（オプション）
     if "llm" in methods:
         logger.info("LLMベースQ/A生成...")
-        # コスト制約のため一部のチャンクのみ
-        for chunk in selected_chunks[:10]:
-            # LLMで高品質なQ/Aを生成（ここは実際のLLM呼び出しが必要）
-            pass
+        # コスト制約のため一部のチャンクのみ（デモ用設定：先頭20チャンク）
+        target_chunks = selected_chunks[:20]
+        
+        for i, chunk in enumerate(target_chunks):
+            # LLMで高品質なQ/Aを生成
+            chunk_qas = generate_llm_qa(
+                chunk['text'],
+                i,
+                model=model,
+                qa_per_chunk=2  # LLMでは少数精鋭
+            )
+            all_qas.extend(chunk_qas)
+            
+            if (i + 1) % 5 == 0:
+                logger.info(f"  LLM進捗: {i + 1}/{len(target_chunks)}チャンク処理済み")
 
     # 重複除去（質問の類似度ベース）
     unique_questions = {}
@@ -979,7 +1045,7 @@ def main():
     parser.add_argument("--dataset", type=str, choices=list(DATASET_CONFIGS.keys()), help="データセットタイプ")
     parser.add_argument("--max-docs", type=int, default=None, help="処理する最大文書数")
     parser.add_argument("--methods", type=str, nargs='+', default=['rule', 'template'], help="使用する手法")
-    parser.add_argument("--model", type=str, default="gpt-4o-mini", help="使用するモデル")
+    parser.add_argument("--model", type=str, default="gemini-2.0-flash", help="使用するモデル")
     parser.add_argument("--output", type=str, default="qa_output", help="出力ディレクトリ")
     parser.add_argument("--analyze-coverage", action="store_true", help="カバレッジ分析を実行")
     parser.add_argument("--coverage-threshold", type=float, default=0.65, help="カバレッジ判定閾値")
@@ -995,9 +1061,9 @@ def main():
     print("=" * 80)
 
     # APIキーチェック
-    api_key = os.getenv('OPENAI_API_KEY')
+    api_key = os.getenv('GOOGLE_API_KEY')
     print("\n📋 環境チェック:")
-    print(f"  OpenAI APIキー: {'✅ 設定済み' if api_key else '❌ 未設定'}")
+    print(f"  Google APIキー: {'✅ 設定済み' if api_key else '❌ 未設定'}")
 
     # データ読み込み
     if args.demo or not args.input:

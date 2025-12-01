@@ -1,0 +1,14 @@
+{
+  "dataset_type": "japanese_text",
+  "dataset_name": "日本語Webテキスト（CC100）",
+  "generated_at": "20251201_164757",
+  "total_qa_pairs": 7,
+  "coverage_rate": 1.0,
+  "covered_chunks": 5,
+  "total_chunks": 5,
+  "files": {
+    "qa_json": "qa_output/a02/qa_pairs_japanese_text_20251201_164757.json",
+    "qa_csv": "qa_output/a02/qa_pairs_japanese_text_20251201_164757.csv",
+    "coverage": "qa_output/a02/coverage_japanese_text_20251201_164757.json"
+  }
+}

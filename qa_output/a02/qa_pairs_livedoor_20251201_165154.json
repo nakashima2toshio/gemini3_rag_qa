@@ -1,0 +1,1482 @@
+[
+  {
+    "question": "『八日目の蝉』は誰の作品ですか？",
+    "answer": "直木賞作家・角田光代による作品です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_0",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "『八日目の蝉』は最初にどのような形で発表されましたか？",
+    "answer": "読売新聞にて連載された長編サスペンス小説として発表されました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_0",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "『八日目の蝉』は、小説以外にどのようなメディアで展開されましたか？",
+    "answer": "テレビドラマと映画化されています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_0",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『八日目の蝉』は、DVD＆ブルーレイでいつ発売されましたか？",
+    "answer": "劇場公開から半年後の10月28日にDVD＆ブルーレイで発売されました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_0",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "『八日目の蝉』の物語の核となる登場人物は誰ですか？",
+    "answer": "妻子ある男と愛し合う女性と、その男の妻が出産した子供です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_0",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "野々宮希和子が恵理菜を誘拐した理由は？",
+    "answer": "不倫相手との子供を中絶し、二度と子供を産めない身体になった希和子が、最後に諦めをつけるために見た恵理菜の笑顔に心を奪われたため。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_1",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "希和子はなぜ小豆島に落ち着いたのか？",
+    "answer": "テキストからは、希和子が小豆島に落ち着いた理由は明示されていません。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_1",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "希和子は不倫相手に何を信じていたか？",
+    "answer": "希和子は不倫相手が「いずれ妻と別れる」という常套句を信じていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_1",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "希和子は恵理菜を誘拐後、どのように生活を始めたか？",
+    "answer": "希和子は恵理菜を連れ去った後、小豆島に落ち着き、母と娘として生活を始めました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_1",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "希和子が中絶した後遺症とは？",
+    "answer": "希和子は中絶の後遺症により、二度と子供を産めない身体になってしまいました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_1",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "恵理菜は名前を変えた後、どこで薫と幸せな時間を過ごしましたか？",
+    "answer": "恵理菜は薫と名乗り、人目を避けて各地を転々としながら幸せな時間を過ごしました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_2",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "恵理菜と薫の逃避行は何年続きましたか？",
+    "answer": "恵理菜と薫の逃避行は4年間続きました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_2",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "恵理菜が実の両親と再会した後、何歳で大学生になりましたか？",
+    "answer": "恵理菜は4歳で実の両親と再会し、21歳で大学生になりました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_2",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "恵理菜が過去と向き合うきっかけとなった出来事は何ですか？",
+    "answer": "劇団ひとりが演じる不倫相手の子を宿し、憎んでいた希和子と同じ道を歩んでいることに気づいたことです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_2",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "恵理菜は誰と共に4年間の逃亡生活を追憶する旅に出ましたか？",
+    "answer": "恵理菜は小池栄子が演じるルポライター・安藤千草と共に旅に出ました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_2",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "恵理菜が最終地・小豆島で見た真実とは何ですか？",
+    "answer": "テキストには、具体的な真実は明記されていません。しかし、希和子との幸せだった時間に触れながら辿り着いた場所であることが示唆されています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_3",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "一般的な蝉の寿命はどのくらいですか？",
+    "answer": "蝉は一生の大半を幼虫として地下で過ごし、地上に出てからは羽化から約1週間程度で死ぬと言われています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_3",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『八日目の蝉』における「八日目」という言葉は、何を象徴していると考えられますか？",
+    "answer": "中絶によって子供を産めなくなった希和子と恵理菜が過ごした、本来あり得なかった幸せな時間を象徴していると考えられます。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_3",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "中島美嘉の『Dear』は、彼女にとってどのような作品でしたか？",
+    "answer": "耳管開放症による音楽活動休止からの復帰第一弾シングルであり、通算33作目のシングルです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_3",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "もしあなたが「八日目の蝉」だとしたら、何を目撃したいですか？",
+    "answer": "この質問に対する回答は、個人の価値観や想像力によって異なります。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_3",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画「八日目の蝉」の通常版DVDの発売日はいつですか？",
+    "answer": "2011年10月28日です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_4",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画「八日目の蝉」に出演している女優は誰ですか？",
+    "answer": "井上真央、永作博美、森口瑤子、小池栄子などが出演しています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_4",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画「八日目の蝉」のDVDの販売元はどこですか？",
+    "answer": "アミューズソフトエンタテインメントです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_4",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画「八日目の蝉」は、原作を読んだ人にどのような影響を与えていますか？",
+    "answer": "原作に深い感銘を受けた人が、本作のために楽曲を提供するほどです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_4",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "記事では、映画「八日目の蝉」の関連情報として何が挙げられていますか？",
+    "answer": "井上真央が逃避行するストーリーや、永作、森口、小池が頭を悩ます映画であることが挙げられています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤_chunk_4",
+    "doc_id": "livedoor_0_【DVDエンター！】誘拐犯に育てられた女が目にした真実は、孤",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』で主演を務めた俳優は誰ですか？",
+    "answer": "藤原竜也が主演を務めました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_0",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "特別授業はどこで行われましたか？",
+    "answer": "千代田区立神田一橋中学校で行われました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_0",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "文部科学副大臣は生徒たちにどのようなエールを送りましたか？",
+    "answer": "チャレンジ精神で頑張ってほしいとエールを送りました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_0",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原竜也は中学生と何を行ったのですか？",
+    "answer": "中学生とともにロケット打ち上げに成功しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_0",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "特別授業のテーマは何ですか？",
+    "answer": "宇宙をテーマにした特別授業でした。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_0",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "第1部でロケットの不思議について説明したのは誰とどこですか？",
+    "answer": "日本宇宙少年団とJAXA（宇宙航空研究開発機構）が説明しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_1",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "アルコールロケット発射実験で、実際の燃料である水素の代わりに何が使われましたか？",
+    "answer": "水素の危険性を考慮して、アルコールが代用されました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_1",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "アルコールロケットの発射実験は何を目的として行われましたか？",
+    "answer": "ロケットと同じ原理で飛ばすことで、生徒の理解を深めることを目的として行われました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_1",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "アルコールロケットが命中したくす玉から現れた垂れ幕には何と書かれていましたか？",
+    "answer": "“祝！ 卒業「おかえり、はやぶさ」大ヒット祈願”と書かれていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_1",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "実際のロケットの燃料とアルコールロケットの燃料の違いは何ですか？",
+    "answer": "実際のロケットの燃料は水素と酸素ですが、アルコールロケットでは水素の代わりにアルコールが使われています。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_1",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "イベントに参加した生徒は何人でしたか？",
+    "answer": "132名の生徒がイベントに参加しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_2",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんは、卒業を控えた中学生に向けてどのようなメッセージを送りましたか？",
+    "answer": "諦めずに前に進んでくださいというメッセージを送りました。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_2",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんは学校について、どんな感想を述べていますか？",
+    "answer": "学校は寒いと感じたようです。友達と遊んだ事を思い出し興奮もしていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_2",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんは、宇宙以外にどんな分野に興味がありますか？",
+    "answer": "生物や生命体にも興味があると述べています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_2",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんは、はやぶさについてどのような関心を持っていましたか？",
+    "answer": "リアルタイムで見たり調べたりしていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_2",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "はやぶさは何年間宇宙を旅しましたか？",
+    "answer": "はやぶさは往復7年間、宇宙を旅しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_3",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "JAXAの人々が諦めずに帰還を成功させた理由は何ですか？",
+    "answer": "数センチ、数ミリの希望を奇跡的にキャッチすることで、JAXAの人々は帰還を成功させました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_3",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画の中で引用されているウィンストン・チャーチルの言葉は何ですか？",
+    "answer": "「成功とは意欲を失わずに、失敗に次ぐ失敗を繰りかえすことである」という言葉が引用されています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_3",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画の内容と中学三年生に共通する点は何ですか？",
+    "answer": "多くの経験をして失敗をしても、意欲を失わないで次に繋げるという点が共通しています。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_3",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "JAXAの人々の苦労について、何がわかりましたか？",
+    "answer": "JAXAの人々の非常に大変な苦労を知ることができました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_3",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんが中学三年生の時に抱いていた夢は何でしたか？",
+    "answer": "サッカー選手になることでした。勉強はせず、学校へは給食を食べに行くだけだったそうです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_4",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんが演劇の世界に入るきっかけは何でしたか？",
+    "answer": "元々サッカー選手を目指していましたが、ある時演劇の世界に入ることになり、気づいたら演劇の世界に引っ張られていたそうです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_4",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんは、自分を変えるために何が重要だと考えていますか？",
+    "answer": "人との出会いが重要だと考えています。たくさんの人と出会い、恋愛もすることが大切だと述べています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_4",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "日本の宇宙開発プロジェクト『はやぶさ』シリーズに期待することは何ですか？",
+    "answer": "多くの国民に希望を与えた『はやぶさ』のように、『はやぶさ2号機』も国民一人一人が応援することで活気がでることを期待しています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_4",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原さんは、これからの人生をどのように過ごすことが大事だと考えていますか？",
+    "answer": "楽に楽しく過ごすことが大事だと考えています。人生には何が起こるか分からないので、アンテナを張りながら生活することが重要だと述べています。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_4",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』は、どのような探査機のエピソードを基にしているか？",
+    "answer": "小惑星探査機“はやぶさ”が2011年6月13日に地球へ帰還するまでのエピソードを基にしている。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_5",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』で描かれているもう一つのテーマは何か？",
+    "answer": "家族や仲間の絆が描かれている。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_5",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』はいつ公開されたか？",
+    "answer": "2012年3月10日(土)に3D&2D同時公開された。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_5",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』にはどのような俳優が出演しているか？",
+    "answer": "藤原竜也、杏、三浦友和、まえだまえだの前田旺志郎などが出演している。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_5",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "藤原竜也は、映画を観る人にどのようなことを期待しているか？",
+    "answer": "宇宙へ興味を持ってもらい、夢へ向かって進む光を射してくれるような映画になることを期待している。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_5",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』に出演している日本の俳優は誰ですか？",
+    "answer": "藤原竜也と杏が出演しています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_6",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』に関連してどのようなグルメが登場しましたか？",
+    "answer": "うな重、カレー、ケーキが登場しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_6",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "なぜ藤原竜也や杏のような俳優は宇宙に行けないと考えられていますか？",
+    "answer": "日本の俳優のスケールでは宇宙に行けないとされていますが、具体的な理由はテキストからは不明です。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_6",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『おかえり、はやぶさ』の関連情報として、他にどのような種類の記事が考えられますか？",
+    "answer": "はやぶさプロジェクトの科学的成果や、映画制作の舞台裏に関する記事などが考えられます。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功_chunk_6",
+    "doc_id": "livedoor_1_藤原竜也、中学生とともにロケット打ち上げに成功",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『戦火の馬』のロイヤル・プレミアに出席したのは誰ですか？",
+    "answer": "ウィリアム王子とキャサリン妃が出席しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_0",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』のロンドン ロイヤル・プレミアは、どのような目的で開催されましたか？",
+    "answer": "英国王室ウィリアム王子とハリー王子が運営する慈善団体のチャリティイベントとして開催されました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_0",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャサリン妃にとって、『戦火の馬』のプレミア出席はどのような機会でしたか？",
+    "answer": "結婚後、初の映画プレミア公式出席でした。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_0",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『戦火の馬』はいつから全国ロードショーとなりますか？",
+    "answer": "3月2日から全国ロードショーとなります。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_0",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』は当時、どのような評価を受けていましたか？",
+    "answer": "アカデミー賞最有力候補として大きな注目を集めていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_0",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』の舞台となっているのは何という戦争ですか？",
+    "answer": "第一次世界大戦が舞台となっています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_1",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』の原作小説の作者は誰ですか？",
+    "answer": "マイケル・モーパーゴです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_1",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "舞台劇『戦火の馬』は、どのようなテーマで人気を博しましたか？",
+    "answer": "「希望」と「絆」をテーマにした感動の物語として人気を博しました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_1",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『戦火の馬』の監督は誰ですか？",
+    "answer": "スティーブン・スピルバーグ監督です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_1",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "エリザベス女王が舞台『戦火の馬』を鑑賞したことは、この作品のどのような影響を与えたと考えられますか？",
+    "answer": "エリザベス女王の鑑賞は、作品の評判を高め、映画化につながる要因の一つになったと考えられます。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_1",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "レッドカーペットに登場した監督は誰ですか？",
+    "answer": "スピルバーグ監督がレッドカーペットに登場しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_2",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャサリン妃は何歳の誕生日を迎えますか？",
+    "answer": "キャサリン妃は30歳の誕生日を迎えます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_2",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "ウィリアム王子がキャサリン妃に傘をさしかけた理由は何ですか？",
+    "answer": "折からの小雨を避けるため、ウィリアム王子はキャサリン妃に傘をさしかけました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_2",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャサリン妃が着用していたドレスのブランドは？",
+    "answer": "キャサリン妃はアリス・バイ・テンパリーの黒のドレスを着ていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_2",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "イベントに集まったマスコミの数はどれくらいですか？",
+    "answer": "欧州メディアを中心に約300人のマスコミが集まりました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_2",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "スピルバーグ監督が言葉を交わしていた会場の名前と収容人数は何ですか？",
+    "answer": "会場はオデオン劇場で、1600名を収容できます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_3",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "「希望」と「絆」の物語は、エリザベス女王から誰に受け継がれたとされていますか？",
+    "answer": "ウィリアム王子とキャサリン妃に受け継がれたとされています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_3",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "スピルバーグ監督にとって、今回のロイヤル・プレミアはどのような機会でしたか？",
+    "answer": "スピルバーグ監督にとって、今回のロイヤル・プレミアは久々の機会であり、彼はそれを非常に名誉なことだと感じていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_3",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "「希望」と「絆」の物語は、30年の間にどのように変化してきましたか？",
+    "answer": "文学、演劇、映画と、時と共に形を変え人々から愛されてきました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_3",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "なぜスピルバーグ監督は今回のロイヤル・プレミアを名誉なことだと感じたのですか？",
+    "answer": "エリザベス女王が列席してのロイヤル・プレミアの経験があるスピルバーグ監督にとって、久々のロイヤル・プレミアだったからです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_3",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "スピルバーグ監督が過去にロイヤル・プレミアで迎えた人物は誰ですか？",
+    "answer": "エリザベス女王、チャールズ皇太子、故・ダイアナ妃夫妻を迎えた経験があります。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_4",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "スピルバーグ監督がケンブリッジ公爵夫妻に会うのは今回が初めてですか？",
+    "answer": "はい、ケンブリッジ公爵夫妻に会うのは初めてだと述べています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_4",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画のテーマは何ですか？",
+    "answer": "この映画は“絆”というテーマを中心に、動物が人々を結びつけ、人間の善の部分を引き出す存在になり得ることを描いています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_4",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画はスピルバーグ監督の過去の作品とどう違いますか？",
+    "answer": "『プライベート・ライアン』やＴＶシリーズ「バンド・オブ・ブラザーズ」のような“戦争モノ”ではなく、叙情的テーマを描いています。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_4",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画で描かれる「動物が人々を結びつける」とは、具体的にどのような状況を指しますか？",
+    "answer": "動物が人々の善なる部分を引き出し、人間関係を良好にする存在として描かれる状況を指します。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_4",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャスリーン・ケネディは過去に誰を迎えてロイヤル・プレミアを行った経験がありますか？",
+    "answer": "キャスリーン・ケネディは過去にチャールズ皇太子とダイアナ妃を迎えてロイヤル・プレミアを行った経験があります。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_5",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャスリーン・ケネディにとって、この映画はどのような体験でしたか？",
+    "answer": "キャスリーン・ケネディにとって、この映画はとても特別で、素晴らしい体験でした。",
+    "question_type": "evaluation",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_5",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画の撮影で、特に印象深かったことは何ですか？",
+    "answer": "たくさんの美しい馬たちに囲まれた撮影が、この作品に携わったすべての人にとって思い出深い体験になったようです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_5",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画が日本の観客に響くと考えられる理由は？",
+    "answer": "人間と動物の間に生まれる“絆”と“希望”というテーマが、今の日本の人たちにとって意味深いからです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_5",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "ジェレミー・アーヴァインは何が光栄だと感じていますか？",
+    "answer": "ジェレミー・アーヴァインは、自分の姿を王室の方たちにスクリーンで観てもらえることが光栄だと感じています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_5",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "トム・ヒドルストンが映画の中で特に好きなシーンを選べない理由は何ですか？",
+    "answer": "どのシーンをとっても素晴らしいから、一つを選ぶことができないと述べています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_6",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "ケンブリッジ公爵夫妻がこの映画を応援していることについて、トム・ヒドルストンはどう感じていますか？",
+    "answer": "非常に光栄に思っているとコメントしています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_6",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画はどのような大切なことを教えてくれると述べられていますか？",
+    "answer": "思いやりの大切さを教えてくれると述べられています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_6",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画の中でジョーイはどのような存在として描かれていますか？",
+    "answer": "残酷な戦争に巻き込まれながらも果敢に生き抜く奇跡の馬として描かれ、出会う人々に勇気と優しさを運びます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_6",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "この映画は観客にどのようなメッセージを伝えていると言えるでしょうか？",
+    "answer": "人に優しくあれ、というメッセージを伝えていると言えます。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_6",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 6,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』の舞台はいつ、どこですか？",
+    "answer": "第一次大戦前夜のイギリスの農村が舞台です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_7",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 7,
+    "provider": "gemini"
+  },
+  {
+    "question": "ジョーイとアルバートの関係は何ですか？",
+    "answer": "ジョーイはアルバートの家の貧しい農家に引き取られた馬で、二人はかけがえのない絆で結ばれています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_7",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 7,
+    "provider": "gemini"
+  },
+  {
+    "question": "なぜジョーイはアルバートから引き離されたのですか？",
+    "answer": "開戦によってジョーイは英国軍の軍馬として最前線に送られたため、アルバートから引き離されました。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_7",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 7,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』の物語を通じて、何が描かれていますか？",
+    "answer": "戦時下の過酷な日々を送るジョーイの旅と、彼が出会う人々の切なくも美しいドラマが描かれています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_7",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 7,
+    "provider": "gemini"
+  },
+  {
+    "question": "『戦火の馬』の物語は、現代社会にどのような教訓を与えますか？",
+    "answer": "戦争の悲惨さや、人と動物の絆の大切さを教えてくれます。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃_chunk_7",
+    "doc_id": "livedoor_2_『戦火の馬』ロイヤル・プレミアにウィリアム王子＆キャサリン妃",
+    "dataset_type": "livedoor",
+    "chunk_idx": 7,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈が出席した映画のタイトルは何ですか？",
+    "answer": "映画『ガール』です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_0",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "試写会が行われた場所はどこですか？",
+    "answer": "都内で行われました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_0",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "試写会に参加した女子高生の人数は約何人ですか？",
+    "answer": "約100人です。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_0",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈の登場時、女子高生はどのような反応をしましたか？",
+    "answer": "「キャー！」「カワイイ！」「ヤバイ！」といった悲鳴に近い歓声が上がりました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_0",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『ガール』はいつ公開されますか？",
+    "answer": "5月26日に公開されます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_0",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈さんの女子高生時代のファッションは何風でしたか？",
+    "answer": "香里奈さんは女子高生時代、安室奈美恵さんの影響を受けたアムラーファッションをしていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_1",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈さんは、自身の女子高生時代についてどのように語っていますか？",
+    "answer": "香里奈さんは、現役の女子高生を前に、「自分も（女子高生に）戻りたい」としみじみ語り、時の流れを感じている様子でした。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_1",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈さんが女子高生時代にしていたメイクの習慣は何ですか？",
+    "answer": "香里奈さんは中高生時代、メイクをしたまま寝てしまうことがあったと語っています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_1",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈さんが、現在の女子高生事情で興味を持っていたことは何ですか？",
+    "answer": "香里奈さんは、現在の女子高生がルーズソックスを履いているかどうかについて興味を示していました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_1",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "香里奈さんは、綺麗でいるために何を心がけていますか？",
+    "answer": "香里奈さんは、「そういう風に思ってもらわなきゃいけない職業なので、頑張ってます」と答えています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_1",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "美の秘訣として紹介されているものは何ですか？",
+    "answer": "水やお茶を飲むこと、マッサージに行くこと、お風呂上りにストレッチをすることなどが美の秘訣として紹介されています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_2",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "なぜ夜の炭水化物を控えるのですか？",
+    "answer": "炭水化物が好きで人並みに太るため、夜の炭水化物を控えることで体重管理をしています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_2",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "炭水化物とお酒を控えることは、なぜ大人にとって難しいのですか？",
+    "answer": "大人になるとお酒を飲む機会が増えるため、炭水化物とお酒の両方を控えることは難しいですが、量を少なくすることで調整しています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_2",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "10代の経験は、どのように今に生きているのですか？",
+    "answer": "10代に経験したことがたくさんあり、それが今の自分に生きているため、恐れずに挑戦し、ダメなら次の道を選べば良いと述べています。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_2",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "夜にラーメンを食べることはありますか？",
+    "answer": "ラーメンを食べることもあるが、炭水化物が好きなので夜の炭水化物は控えたりして調整しているようです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_2",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『ガール』はいつから全国ロードショーされますか？",
+    "answer": "2012年5月26日（土）から全国ロードショーされます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_3",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『ガール』に関連する情報は何がありますか？",
+    "answer": "映画『ガール』の公式サイトと特集への関連リンクがあります。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_3",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画の内容から、どのようなアドバイスが送られたと考えられますか？",
+    "answer": "新しいことや夢を追いかけるようにというアドバイスが送られたと考えられます。",
+    "question_type": "application",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_3",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『ガール』に関する情報はどこで確認できますか？",
+    "answer": "映画『ガール』公式サイトで確認できます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ_chunk_3",
+    "doc_id": "livedoor_3_香里奈、女子高生100人のガチンコ質問に回答「ラーメンも食べ",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "映画『キャプテン・アメリカ/ザ・ファースト・アベンジャー』の公開記念イベントはどこで開催されましたか？",
+    "answer": "東京・千代田区の内幸町ホールで開催されました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_0",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "和製キャプテン・アメリカとしてPR活動をしていたのは誰ですか？",
+    "answer": "上島竜兵から生まれ変わって誕生したユージです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_0",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "イベントにユージが登場する際、何に乗っていましたか？",
+    "answer": "バイクに乗って登場しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_0",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "ユージのイベント登場時、誰を引き連れていましたか？",
+    "answer": "キャプテン・アメリカを応援する“キャプアメ・ガールズ”を引き連れていました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_0",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYは何を守ると発言しましたか？",
+    "answer": "JOYはAKBの高橋みなみを守ると発言しました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_0",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 0,
+    "provider": "gemini"
+  },
+  {
+    "question": "イベント当日、キャプテン・アメリカのPRの相方として壇上に現れたのは誰でしたか？",
+    "answer": "レッド・スカルでした。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_1",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "レッド・スカルの正体は誰でしたか？",
+    "answer": "レッド・スカルの正体はモデルのJOYでした。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_1",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "ユージとJOYが比較される理由は何ですか？",
+    "answer": "容姿や芸風が似ているからです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_1",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYが『ヒルナンデス!』を休養していた際、代役を務めたのは誰ですか？",
+    "answer": "ユージが代役を務めました。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_1",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャプテン・アメリカとレッド・スカルの関係と異なり、ユージとJOYの関係で共通していることは何ですか？",
+    "answer": "プライベートでも仲が良いことです。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_1",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 1,
+    "provider": "gemini"
+  },
+  {
+    "question": "ユージがキャプテン・アメリカとしての仕事でバイクに乗った時の気持ちはどうでしたか？",
+    "answer": "とても気持ちが良かったと述べています。キャプアメ・ガールズが一緒にいたこともテンションが上がった要因だそうです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_2",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "全国をまわった宣伝活動で、ユージはどのような歓迎を受けましたか？",
+    "answer": "日本全国どこに行っても温かく迎えられ、小さい子どもが目をキラキラさせているのを見て、ヒーローとしての自覚が高まったそうです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_2",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "クリス・エヴァンスからのビデオメッセージを見たユージの感想は何ですか？",
+    "answer": "めちゃくちゃ嬉しいと述べています。本物のキャプテン・アメリカからのメッセージに感激したようです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_2",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYさんの登場を知らされていなかった時、ユージは誰が来ると聞かされていましたか？",
+    "answer": "マネージャーからは「格闘家が来る」と聞かされていたそうです。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_2",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYさんだと気づいた理由は何ですか？",
+    "answer": "マスクをしていてもあの独特の声と骨格と動きですぐにJOYだとわかったそうです。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_2",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 2,
+    "provider": "gemini"
+  },
+  {
+    "question": "ユージとJOYは、お互いの性格についてどのように述べていますか？",
+    "answer": "ユージは、実際にはJOYとは性格が正反対だと述べています。JOYは、テレビでは自分がちゃらいキャラだが、実際はユージの方がちゃらいと述べています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_3",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "ユージとJOYの関係を、ユージはどのように表現していますか？",
+    "answer": "ユージは、JOYとの関係をライバルというよりは戦友だと表現しています。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_3",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYが入院した際、ユージはどのような気持ちになりましたか？",
+    "answer": "JOYが入院したとき、ユージは始めは少し嬉しい気持ちもありましたが、1週間くらいすると戦う相手がいないので自分を見失いそうになったと述べています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_3",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYは休養中にユージの活躍をどのように見ていましたか？",
+    "answer": "JOYは休養中にユージが頑張っているなと思いながら見ていたと述べています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_3",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYはユージとの関係を何に例えようとしましたか？",
+    "answer": "JOYはユージとの関係をキャプテン・アメリカとレッド・スカルのような関係に例えようとしました。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_3",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 3,
+    "provider": "gemini"
+  },
+  {
+    "question": "ユージが語るキャプテン・アメリカの人物像とは？",
+    "answer": "特殊能力を持たず生身で戦い、ただ攻めるだけでなく守る戦いをする、みんなのために何かできる真のヒーロー。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_4",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "なぜユージは“和製キャプテン・アメリカ”と評されたのか？",
+    "answer": "キャプテン・アメリカの人物像について的確なコメントをしたため。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_4",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャプテン・アメリカとレッド・スカルの戦いは、ユージとJOYの関係とどう違うか？",
+    "answer": "ユージとJOYの関係が和やかであるのに対し、キャプテン・アメリカとレッド・スカルの戦いは壮絶。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_4",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "JOYは誰を守りたいと言ったか？",
+    "answer": "JOYはAKBの高橋みなみのような女性を守りたいと言った。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_4",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "キャプテン・アメリカは、どのような戦い方をするヒーローか？",
+    "answer": "キャプテン・アメリカは、ただ攻めるのではなく守る戦い方をするヒーローである。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_4",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 4,
+    "provider": "gemini"
+  },
+  {
+    "question": "『キャプテン・アメリカ/ザ・ファースト・アベンジャー』はいつから公開されますか？",
+    "answer": "2011年10月14日(金)から丸の内ルーブルほか全国で公開されます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_5",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "『キャプテン・アメリカ/ザ・ファースト・アベンジャー』はどのような形式で公開されますか？",
+    "answer": "全国超拡大3Dロードショーとして公開されます。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_5",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "記事では、誰が極秘実験でイケメンマッチョに変身したと報じられていますか？",
+    "answer": "上島竜兵が出川に負けないために極秘実験でイケメンマッチョに変身したと報じられています。",
+    "question_type": "fact",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_5",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "記事で比較されているヒーローは何ですか？",
+    "answer": "歴代のアメコミヒーロー、特にキャプテン・アメリカの実力が比較されています。",
+    "question_type": "comparison",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_5",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  },
+  {
+    "question": "スーパーヒーローが派手なコスチュームを着用する理由は何ですか？",
+    "answer": "記事では、スーパーヒーローが派手なコスチュームを着用する理由が述べられています。",
+    "question_type": "reason",
+    "source_chunk_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守_chunk_5",
+    "doc_id": "livedoor_4_ユージの前に立ちはだかったJOY「僕はAKBの高橋みなみを守",
+    "dataset_type": "livedoor",
+    "chunk_idx": 5,
+    "provider": "gemini"
+  }
+]

@@ -1,0 +1,14 @@
+{
+  "dataset_type": "livedoor",
+  "dataset_name": "Livedoorニュースコーパス",
+  "generated_at": "20251201_165154",
+  "total_qa_pairs": 148,
+  "coverage_rate": 1.0,
+  "covered_chunks": 30,
+  "total_chunks": 30,
+  "files": {
+    "qa_json": "qa_output/a02/qa_pairs_livedoor_20251201_165154.json",
+    "qa_csv": "qa_output/a02/qa_pairs_livedoor_20251201_165154.csv",
+    "coverage": "qa_output/a02/coverage_livedoor_20251201_165154.json"
+  }
+}

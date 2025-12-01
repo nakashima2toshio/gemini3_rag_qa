@@ -1491,10 +1491,16 @@ class SemanticCoverage:
         # Gemini埋め込みクライアントを使用
         self.embedding_client = create_embedding_client(provider="gemini")
         self.embedding_dims = get_embedding_dimensions("gemini")  # 3072
-        self.tokenizer = tiktoken.get_encoding("cl100k_base")
+        # トークンカウント用のLLMクライアント (decode機能がないためtiktokenを併用)
+        self.unified_client = create_llm_client(provider="gemini") 
+        self.tokenizer = tiktoken.get_encoding("cl100k_base") # 強制分割・デコード用にtiktokenを使用
+        
+        # APIキーの有無フラグ（クライアント作成成功ならTrue）
+        self.has_api_key = True
 
         # MeCab利用可否チェック
         self.mecab_available = self._check_mecab_availability()
+
 
     def _check_mecab_availability(self) -> bool:
         """MeCabの利用可能性をチェック"""
