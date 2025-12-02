@@ -41,46 +41,36 @@ Geminiモデルへの移行と `UnifiedLLMClient` による抽象化を反映し
 
 ### 1.2 関連ファイル一覧
 
-| ファイル | 役割 | 主要な処理 |
-|--------|------|-----------|
-| `a02_make_qa_para.py` | 主要なプロンプト処理・Q/A生成 | プロンプト構築、UnifiedLLMClient呼び出し |
-| `helper_llm.py` | LLM抽象化レイヤー | Gemini/OpenAI共通インターフェース、構造化出力制御 |
-| `helper_api.py` | 旧APIラッパー（互換性維持） | OpenAIクライアント（一部機能で使用） |
-| `models.py` | Pydanticモデル | `QAPair`, `QAPairsResponse` 定義 |
-| `config.py` | 設定管理 | モデル設定、プロンプト定数 |
+
+| ファイル              | 役割                          | 主要な処理                                        |
+| --------------------- | ----------------------------- | ------------------------------------------------- |
+| `a02_make_qa_para.py` | 主要なプロンプト処理・Q/A生成 | プロンプト構築、UnifiedLLMClient呼び出し          |
+| `helper_llm.py`       | LLM抽象化レイヤー             | Gemini/OpenAI共通インターフェース、構造化出力制御 |
+| `helper_api.py`       | 旧APIラッパー（互換性維持）   | OpenAIクライアント（一部機能で使用）              |
+| `models.py`           | Pydanticモデル                | `QAPair`, `QAPairsResponse` 定義                  |
+| `config.py`           | 設定管理                      | モデル設定、プロンプト定数                        |
 
 ### 1.3 プロンプト処理フロー図
 
-```
-[入力データ]
-    │
-    ▼
-[セマンティックチャンク分割]  ←── helper_rag_qa.py: SemanticCoverage
-    │
-    ▼
-[チャンク統合]  ←── a02_make_qa_para.py: merge_small_chunks()
-    │
-    ▼
-[複雑度分析・キーワード抽出]
-    │
-    ▼
-[プロンプト構築]
-    │   ├── システムプロンプト（役割定義）
-    │   └── ユーザープロンプト（テキスト + 質問タイプ + JSONスキーマ）
-    │
-    ▼
-[UnifiedLLMClient呼び出し]  ←── helper_llm.py
-    │
-    ├── Provider: "gemini" (Default)
-    │   └── genai.Client.models.generate_content()
-    │       (config: response_schema=QAPairsResponse)
-    │
-    ▼
-[レスポンス解析]
-    │   └── Pydanticモデルへの自動マッピング
-    │
-    ▼
-[Q/Aペア出力]
+```mermaid
+flowchart TD
+    Input["入力データ"] --> Chunking["セマンティックチャンク分割<br>helper_rag_qa.py: SemanticCoverage"]
+    Chunking --> Merge["チャンク統合<br>a02_make_qa_para.py: merge_small_chunks"]
+    Merge --> Analyze["複雑度分析・キーワード抽出"]
+    Analyze --> BuildPrompt["プロンプト構築"]
+  
+    BuildPrompt --> SystemPrompt["システムプロンプト<br>役割定義"]
+    BuildPrompt --> UserPrompt["ユーザープロンプト<br>テキスト + 質問タイプ + JSONスキーマ"]
+  
+    SystemPrompt --> LLMCall["UnifiedLLMClient呼び出し<br>helper_llm.py"]
+    UserPrompt --> LLMCall
+  
+    LLMCall -- "Provider: gemini" --> GeminiAPI["genai.Client.models.generate_content<br>config: response_schema=QAPairsResponse"]
+  
+    GeminiAPI --> Parse["レスポンス解析<br>Pydanticモデルへの自動マッピング"]
+    Parse --> Output["Q/Aペア出力"]
+
+
 ```
 
 ---
@@ -91,8 +81,8 @@ Geminiモデルへの移行と `UnifiedLLMClient` による抽象化を反映し
 
 Gemini移行後も、**システムプロンプト**と**ユーザープロンプト**の概念的な分離は維持されています。
 
-*   **システムプロンプト**: LLMの役割（「教育コンテンツ作成の専門家」）と全般的なルールを定義。
-*   **ユーザープロンプト**: 具体的な処理対象テキスト、出力数、質問タイプ、JSON形式の指示を含みます。
+* **システムプロンプト**: LLMの役割（「教育コンテンツ作成の専門家」）と全般的なルールを定義。
+* **ユーザープロンプト**: 具体的な処理対象テキスト、出力数、質問タイプ、JSON形式の指示を含みます。
 
 ※ `helper_llm.py` の `generate_structured` メソッドは `system_instruction` 引数をサポートしていますが、現在の `a02_make_qa_para.py` では、これらを結合して `prompt` として渡す実装パターンも見られます。
 
@@ -105,17 +95,17 @@ Gemini移行後も、**システムプロンプト**と**ユーザープロン�
 
 チャンクのトークン数や複雑度に応じて、生成するQ/Aペア数（`num_pairs`）を動的に調整します。
 
-*   **Short (<100 tokens)**: 2-3ペア (Geminiの性能向上により増加)
-*   **Medium (<200 tokens)**: 基本数 + 1
-*   **Long**: 基本数 + 2~3
-*   **位置補正**: 文書後半のチャンクは +1
+* **Short (<100 tokens)**: 2-3ペア (Geminiの性能向上により増加)
+* **Medium (<200 tokens)**: 基本数 + 1
+* **Long**: 基本数 + 2~3
+* **位置補正**: 文書後半のチャンクは +1
 
 ### 2.4 型安全な出力（UnifiedLLMClient）
 
 `UnifiedLLMClient` は、プロバイダー（Gemini/OpenAI）に関わらず、Pydanticモデルを用いた型安全な出力を保証します。
 
-*   **Gemini**: `response_mime_type: "application/json"` と `response_schema` を使用し、JSONモードで生成後、Pydanticモデルにパースします。
-*   **OpenAI**: `response_format` (Structured Outputs) を使用します。
+* **Gemini**: `response_mime_type: "application/json"` と `response_schema` を使用し、JSONモードで生成後、Pydanticモデルにパースします。
+* **OpenAI**: `response_format` (Structured Outputs) を使用します。
 
 ---
 
@@ -153,10 +143,10 @@ Generation rules:
 
 `config.py` で定義された階層構造に基づき、プロンプト内では以下の簡略化されたタイプを指定します。
 
-*   **fact**: 事実確認型 (Definition, Identification)
-*   **reason**: 理由説明型 (Cause-Effect, Process)
-*   **comparison**: 比較型 (Comparison)
-*   **application**: 応用型 (Synthesis, Evaluation)
+* **fact**: 事実確認型 (Definition, Identification)
+* **reason**: 理由説明型 (Cause-Effect, Process)
+* **comparison**: 比較型 (Comparison)
+* **application**: 応用型 (Synthesis, Evaluation)
 
 ---
 
@@ -189,6 +179,44 @@ JSON形式で出力:
   ]
 }
 ```
+
+### 5.1 プロンプト設計の効果例
+
+具体的で構造化されたプロンプトを使用することで、回答の質がどのように変わるかの例です。
+
+#### 悪いプロンプト例（指示が曖昧）
+
+> このテキストからクイズを作って。
+>
+> テキスト: ...
+
+**生成される可能性のある回答（制御不能）:**
+
+> Q: この文章の主語は？
+> A: 私
+> *（※文脈がなく、単純すぎる。形式もバラバラで機械処理できない）*
+
+#### 良いプロンプト例（本システム採用）
+
+> 以下のテキストから教育的なQ&Aを生成してください。
+>
+> - 質問タイプ: 'reason' (なぜ〜ですか？)
+> - 出力形式: JSON（スキーマに従うこと）
+> - 回答は1-2文で簡潔に記述すること
+>
+> テキスト: ...
+
+**生成される回答（高品質・構造化済み）:**
+
+```json
+{
+  "question": "なぜ著者はRAGシステムにおいてセマンティックチャンク分割を推奨しているのですか？",
+  "answer": "文脈の分断を防ぎ、検索精度を向上させるためです。",
+  "question_type": "reason"
+}
+```
+
+*（※目的が明確で、学習効果が高く、システムで即座に利用可能な形式）*
 
 ---
 
@@ -242,17 +270,19 @@ for qa in response.qa_pairs:
 ```
 
 **Gemini特有の動作:**
-*   Gemini APIは `response_schema` を受け取り、JSONとして出力を強制します。
-*   `helper_llm.py` 内部で JSON 文字列をパースし、`QAPairsResponse` インスタンスに変換して返します。
+
+* Gemini APIは `response_schema` を受け取り、JSONとして出力を強制します。
+* `helper_llm.py` 内部で JSON 文字列をパースし、`QAPairsResponse` インスタンスに変換して返します。
 
 ### 7.3 モデル別パラメータ設定
 
-| パラメータ | Gemini (gemini-2.0-flash) | OpenAI (gpt-4o) | 備考 |
-|---|---|---|---|
-| **temperature** | 0.0 - 1.0 (デフォルトあり) | 0.0 - 2.0 | 生成の多様性制御 |
-| **max_output_tokens** | 指定推奨 (例: 4000) | 指定推奨 | 出力長制限 |
-| **response_schema** | `generate_content` の `config` で指定 | `responses.parse` の `response_format` | 構造化出力用 |
-| **thinking_level** | `gemini-3` 系のみ対応 | 非対応 | 推論深さの制御 |
+
+| パラメータ            | Gemini (gemini-2.0-flash)             | OpenAI (gpt-4o)                        | 備考             |
+| --------------------- | ------------------------------------- | -------------------------------------- | ---------------- |
+| **temperature**       | 0.0 - 1.0 (デフォルトあり)            | 0.0 - 2.0                              | 生成の多様性制御 |
+| **max_output_tokens** | 指定推奨 (例: 4000)                   | 指定推奨                               | 出力長制限       |
+| **response_schema**   | `generate_content` の `config` で指定 | `responses.parse` の `response_format` | 構造化出力用     |
+| **thinking_level**    | `gemini-3` 系のみ対応                 | 非対応                                 | 推論深さの制御   |
 
 ---
 
@@ -277,13 +307,16 @@ class QAPairsResponse(BaseModel):
 
 `config.py` および `a02_make_qa_para.py` 内で定義されます。
 
-| データセット | 言語 | モデル (推奨) | バッチサイズ | 特記事項 |
-|---|---|---|---|---|
-| **cc_news** | en | gemini-2.0-flash | 3-5 | 英語ニュース、構造的 |
-| **wikipedia_ja** | ja | gemini-2.0-flash | 3 | 情報密度高 |
-| **livedoor** | ja | gemini-2.0-flash | 3-5 | 日本語ニュース |
-| **japanese_text** | ja | gemini-2.0-flash | 3 | Webテキスト、品質ばらつきあり |
+
+| データセット      | 言語 | モデル (推奨)    | バッチサイズ | 特記事項                      |
+| ----------------- | ---- | ---------------- | ------------ | ----------------------------- |
+| **cc_news**       | en   | gemini-2.0-flash | 3-5          | 英語ニュース、構造的          |
+| **wikipedia_ja**  | ja   | gemini-2.0-flash | 3            | 情報密度高                    |
+| **livedoor**      | ja   | gemini-2.0-flash | 3-5          | 日本語ニュース                |
+| **japanese_text** | ja   | gemini-2.0-flash | 3            | Webテキスト、品質ばらつきあり |
 
 ※ Gemini 2.0 Flash は高速かつ安価なため、バッチサイズを大きめ（3〜5）に設定しても効率的に処理可能です。
+
+```
 
 ```

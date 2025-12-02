@@ -65,39 +65,26 @@
 
 ### 1.2 システム構成図
 
-```
-+---------------------------------------------------------------------+
-|                        ユーザー(ブラウザ)                            |
-|                      http://localhost:8500                          |
-+--------------------------------+------------------------------------+
-                                 |
-                                 v
-+---------------------------------------------------------------------+
-|                  Streamlit アプリケーション                          |
-|                  rag_qa_pair_qdrant.py                              |
-|                      Port: 8500                                      |
-+--------------------------------+------------------------------------+
-                                 |
-         +-----------------------+------------------------+
-         |                       |                        |
-         v                       v                        v
-+-----------------+    +-----------------+    +-------------------+
-|   Gemini API    |    |     Qdrant      |    |  Celery Workers   |
-|  (クラウド)      |    |   Port: 6333    |    |  (並列処理)        |
-|                 |    |   (Docker)      |    |                   |
-| - Q&A生成       |    |                 |    | - Q&A生成タスク    |
-| - Embedding     |    | - ベクトル検索   |    | - バッチ処理       |
-+-----------------+    +-----------------+    +---------+---------+
-                                                       |
-                                                       v
-                                              +-----------------+
-                                              |      Redis      |
-                                              |   Port: 6379    |
-                                              |   (Docker)      |
-                                              |                 |
-                                              | - タスクキュー   |
-                                              | - 結果保存       |
-                                              +-----------------+
+```mermaid
+graph TD
+    User((ユーザー<br>ブラウザ)) -->|http://localhost:8500| Streamlit[Streamlit アプリケーション<br>rag_qa_pair_qdrant.py<br>Port: 8500]
+    
+    Streamlit -->|Q&A生成/Embedding| Gemini(Gemini API<br>クラウド)
+    Streamlit -->|ベクトル検索| Qdrant[(Qdrant<br>Port: 6333<br>Docker)]
+    Streamlit -.->|タスク登録| Redis[(Redis<br>Port: 6379<br>Docker)]
+    
+    subgraph Background Jobs
+        Celery[[Celery Workers<br>並列処理]]
+        Celery -->|タスク取得/結果保存| Redis
+        Celery -->|Q&A生成| Gemini
+    end
+
+    style User fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style Streamlit fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style Gemini fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style Qdrant fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style Redis fill:#000,stroke:#fff,stroke-width:2px,color:#fff
+    style Celery fill:#000,stroke:#fff,stroke-width:2px,color:#fff
 ```
 
 ### 1.3 前提条件・動作環境
@@ -424,6 +411,7 @@ task_retry_kwargs = {
 chmod +x start_celery.sh
 
 # ワーカー起動(24ワーカー)
+# ※PCのスペック(CPUコア数/メモリ)に合わせて調整してください(例: 4~8)
 ./start_celery.sh start -w 24
 
 # ステータス確認
@@ -683,6 +671,18 @@ cat .env | grep GEMINI_API_KEY
 # 空白や改行が含まれていないか確認
 ```
 
+#### Gemini API 429エラー (Resource Exhausted)
+
+**エラー:** 429 Resource has been exhausted (e.g. check quota).
+
+**対処:**
+
+* **原因**: APIのレート制限(RPM/TPM)を超過しています。
+* **対策**:
+    1. Celeryのワーカー数を減らす (`./start_celery.sh restart -w 4`)
+    2. `celery_rate_limit_fix.py` (もしあれば) を適用するか、リトライ設定を確認する
+    3. Pay-as-you-goプランへの移行を検討する
+
 #### MeCabエラー
 
 **エラー:** MeCab: Failed to initialize
@@ -841,3 +841,4 @@ gemini_rag_qa/
 | 日付 | 変更内容 |
 |------|---------|
 | 2025-11-28 | 初版作成 |
+| 2025-12-03 | 構成図のMermaid化、トラブルシューティング追記 |
