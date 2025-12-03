@@ -1,3 +1,42 @@
+rag_qa_pair_qdrant.pyのドキュメント：doc/05_qa_pair.mdの最新化と、他のコード、ドキュメントの最新化に
+ともない、目次、内容の再構成、高品質化を実施したい。
+
+・ドキュメント
+doc/01_install.md
+doc/02_rag.md
+doc/03_chunk.md
+doc/04_prompt.md
+doc/05_qa_pair.md
+oc/06_embedding_qdrant.md
+oc/07_qdrant_integration_add.md
+doc/08_rag_qa_pair_qdrant.md
+
+・ソース
+a01_load_non_qa_rag_data.py
+a02_make_qa_para.py
+a03_rag_qa_coverage_improved.py
+a10_qa_optimized_hybrid_batch.py
+a31_make_gemini_corpus.py
+a40_show_qdrant_data.py
+a41_qdrant_truncate.py
+a42_qdrant_gemini_registration.py
+a42_qdrant_registration.py
+a50_rag_search_local_qdrant.py
+
+メイン：
+qdrant_client_wrapper.py
+rag_qa_pair_qdrant.py
+
+・ヘルパー
+helper_api.py
+helper_embedding.py
+helper_llm.py
+helper_rag.py
+helper_rag_qa.py
+helper_st.py
+helper_text.py
+
+
 # カバレージ分析結果の総合比較レポート
 
 ## エグゼクティブサマリー
