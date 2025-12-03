@@ -1,5 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+import sys
+import os
+# 標準出力を強制的にフラッシュモードにする
+sys.stdout.reconfigure(line_buffering=True)
+sys.stderr.reconfigure(line_buffering=True)
+print("DEBUG: a02_make_qa_para.py script started (reconfigured stdout)", flush=True)
 r"""
 a02_make_qa_para.py - 改善版Q/Aペア自動生成システム
 =========================================================================
@@ -213,9 +219,6 @@ from config import (
     DATASET_CONFIGS,
     QAGenerationConfig,
 )
-
-# ローカルモジュール
-from a03_rag_qa_coverage_improved import SemanticCoverage
 
 # 環境変数読み込み
 load_dotenv()
@@ -780,7 +783,12 @@ def create_document_chunks(df: pd.DataFrame, dataset_type: str, max_docs: Option
 
     logger.info(f"チャンク作成開始: {len(docs_to_process)}件の文書（セマンティック分割）")
 
-    for idx, row in docs_to_process.iterrows():
+    total_docs = len(docs_to_process)
+    for i, (idx, row) in enumerate(docs_to_process.iterrows()):
+        # 進捗ログ（10件ごと）
+        if (i + 1) % 10 == 0 or (i + 1) == total_docs:
+            logger.info(f"  チャンク作成進捗: {i + 1}/{total_docs} 文書完了")
+
         # row[text_col]はSeriesやオブジェクトの可能性があるため、明示的にstrに変換
         text = str(row[text_col]) if pd.notna(row[text_col]) else ""
 
@@ -1389,12 +1397,15 @@ def check_celery_workers(required_workers: int = 8) -> bool:
         ワーカーが正常に稼働している場合True
     """
     try:
+        logger.info("Celery設定を読み込み中...")
         from celery_tasks import app as celery_app
+        logger.info("Celery設定読み込み完了")
 
         # ワーカーのstats情報を取得（最大3回リトライ）
         inspect = celery_app.control.inspect(timeout=2.0)
         stats = None
 
+        logger.info("ワーカー状態を問い合わせ中...")
         for attempt in range(3):
             stats = inspect.stats()
             if stats:
@@ -1404,7 +1415,7 @@ def check_celery_workers(required_workers: int = 8) -> bool:
                 time.sleep(1)
 
         if not stats:
-            logger.warning("⚠️  Celeryワーカーが起動していません")
+            logger.warning("⚠️  Celeryワーカーが起動していません（応答なし）")
             logger.info("以下のコマンドでワーカーを起動してください:")
             logger.info(f"  ./start_celery.sh start -w {required_workers}")
             logger.info("\nまたは:")
@@ -1638,6 +1649,7 @@ def analyze_coverage(chunks: List[Dict], qa_pairs: List[Dict], dataset_type: str
     Returns:
         カバレージ分析結果（多段階評価、チャンク特性分析を含む）
     """
+    from helper_rag_qa import SemanticCoverage
     analyzer = SemanticCoverage()
 
     # 埋め込み生成（バッチAPI最適化版）
@@ -2011,6 +2023,14 @@ def main():
             # 既存のpreprocessedデータ読み込み
             df = load_preprocessed_data(dataset_type)
 
+        # 1.5 Celeryワーカーの事前確認（Fail Fast）
+        if args.use_celery:
+            logger.info("Celeryワーカーの状態を確認中...")
+            if not check_celery_workers(args.celery_workers):
+                logger.error("Celeryワーカーを起動してから再実行してください")
+                sys.exit(1)
+            logger.info(f"✓ Celeryワーカー確認OK（{args.celery_workers}ワーカー）")
+
         # 2. チャンク作成
         logger.info("\n[2/4] チャンク作成...")
         # ローカルファイルの場合、max_docsは読み込み時に適用済み
@@ -2025,11 +2045,6 @@ def main():
         logger.info("\n[3/4] Q/Aペア生成...")
 
         if args.use_celery:
-            # Celeryワーカーの状態確認
-            if not check_celery_workers(args.celery_workers):
-                logger.error("Celeryワーカーを起動してから再実行してください")
-                sys.exit(1)
-
             logger.info(f"Celery並列処理モード: ワーカー数={args.celery_workers}")
             logger.info(f"オプション: バッチサイズ={args.batch_chunks}, チャンク統合={'有効' if args.merge_chunks else '無効'}")
 
@@ -2073,7 +2088,7 @@ def main():
         # 4. カバレージ分析（オプション）
         coverage_results = {}
         if args.analyze_coverage and qa_pairs:
-            logger.info("\n[4/4] カバレージ分析...")
+            logger.info("\n[4/4] カバレージ分析を開始します（Embedding生成に時間がかかる場合があります）...")
             coverage_results = analyze_coverage(
                 chunks, qa_pairs, dataset_type,
                 custom_threshold=args.coverage_threshold

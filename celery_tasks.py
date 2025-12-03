@@ -4,25 +4,31 @@
 celery_tasks.py - Celery非同期タスク定義
 =========================================
 Q/Aペア生成の並列処理のためのCeleryタスク定義
+
+celery_config.py
+celery_rate_limit_fix.py
+celery_tasks.py
 """
 
 import os
 import json
 import logging
-from typing import List, Dict, Optional
+from typing import List, Dict
 from celery import Celery
 from dotenv import load_dotenv
 # 環境変数読み込み
 load_dotenv()
 
 # 共通モジュールからインポート
+# noqa: E402
 from models import QAPairsResponse
+# noqa: E402
 from config import ModelConfig, CeleryConfig
 
 # =====================================================
 # Gemini 3 Migration: 抽象化レイヤー
 # =====================================================
-from helper_llm import create_llm_client, LLMClient
+from helper_llm import create_llm_client
 
 # デフォルトプロバイダー（環境変数で設定可能）
 DEFAULT_LLM_PROVIDER = os.getenv("LLM_PROVIDER", "gemini")  # "gemini" or "openai"
@@ -211,7 +217,7 @@ def generate_qa_for_chunk_async(self, chunk_data: Dict, config: Dict, model: str
     Returns:
         生成されたQ/Aペアと関連情報を含む辞書
     """
-    logger.info(f"[後方互換ラッパー] generate_qa_for_chunk_async -> generate_qa_unified_async")
+    logger.info("[後方互換ラッパー] generate_qa_for_chunk_async -> generate_qa_unified_async")
     # 統合タスクに委譲（Geminiを使用）
     return generate_qa_unified_async(chunk_data, config, model=None, provider="gemini")
 
@@ -231,7 +237,7 @@ def generate_qa_for_batch_async(self, chunks: List[Dict], config: Dict, model: s
     Returns:
         生成されたQ/Aペアと関連情報を含む辞書
     """
-    logger.info(f"[後方互換ラッパー] generate_qa_for_batch_async -> generate_qa_unified_async (複数チャンク)")
+    logger.info("[後方互換ラッパー] generate_qa_for_batch_async -> generate_qa_unified_async (複数チャンク)")
 
     chunk_ids = [c.get('id', 'unknown') for c in chunks]
     all_qa_pairs = []
@@ -345,7 +351,7 @@ Output in JSON format:
 {{"qa_pairs": [{{"question": "question text", "answer": "answer text", "question_type": "fact/reason/comparison/application"}}]}}"""
 
         # 統合LLMクライアントを使用
-        llm_client = create_llm_client(provider=provider)
+        llm_client = create_llm_client(provider=str(provider))
 
         # 構造化出力を試行
         try:
@@ -380,7 +386,7 @@ Output in JSON format:
 
             # JSONを抽出して解析
             import re
-            json_match = re.search(r'\{.*\}', response_text, re.DOTALL)
+            json_match = re.search(r'\{.*}', response_text, re.DOTALL)
             if json_match:
                 parsed_data = json.loads(json_match.group())
                 qa_pairs = []
@@ -457,7 +463,7 @@ def submit_unified_qa_generation(
 
     for chunk in chunks:
         task = generate_qa_unified_async.apply_async(
-            args=[chunk, config, model, provider],
+            args=(chunk, config, model, provider),
             queue='qa_generation'
         )
         tasks.append(task)
@@ -487,7 +493,7 @@ def submit_parallel_qa_generation(chunks: List[Dict], config: Dict, model: str =
         for i in range(0, len(chunks), batch_size):
             batch = chunks[i:i+batch_size]
             task = generate_qa_for_batch_async.apply_async(
-                args=[batch, config, model],
+                args=(batch, config, model),
                 queue='qa_generation'  # ワーカーが監視しているキューを指定
             )
             tasks.append(task)
@@ -496,7 +502,7 @@ def submit_parallel_qa_generation(chunks: List[Dict], config: Dict, model: str =
         # 個別処理の場合
         for chunk in chunks:
             task = generate_qa_for_chunk_async.apply_async(
-                args=[chunk, config, model],
+                args=(chunk, config, model),
                 queue='qa_generation'  # ワーカーが監視しているキューを指定
             )
             tasks.append(task)
@@ -524,12 +530,11 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
     import time
     import redis
     import json
-    from celery.result import AsyncResult
 
     total_tasks = len(tasks)
-    logger.info(f"=" * 60)
+    logger.info("=" * 60)
     logger.info(f"結果収集開始: {total_tasks}個のタスク (タイムアウト: {timeout}秒)")
-    logger.info(f"=" * 60)
+    logger.info("=" * 60)
 
     # タスクIDリストを作成
     task_ids = [task.id for task in tasks]
@@ -636,7 +641,7 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
                     status = task_result.get('status', 'UNKNOWN')
                     if status not in ['SUCCESS', 'FAILURE']:
                         pending_task_details.append(f"{task_id[:12]}...({status})")
-                except:
+                except Exception:
                     pending_task_details.append(f"{task_id[:12]}...(JSON_ERROR)")
 
         if pending_task_details:
@@ -673,7 +678,7 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
                 continue
 
             try:
-                task_result = json.loads(redis_data)
+                task_result = json.loads(str(redis_data))
             except json.JSONDecodeError as e:
                 logger.warning(f"[{i+1}/{total_tasks}] タスク {task_id[:12]}... JSONデコードエラー: {str(e)[:50]}")
                 error_count += 1
@@ -753,7 +758,7 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
     missing_task_ids = submitted_task_ids - collected_task_ids
     if missing_task_ids:
         logger.warning(f"[診断] 取得できなかったタスク数: {len(missing_task_ids)}")
-        logger.warning(f"[診断] 取得できなかったタスクID（最初の10個）:")
+        logger.warning("[診断] 取得できなかったタスクID（最初の10個）:")
         for tid in list(missing_task_ids)[:10]:
             # Redisの状態を再確認
             redis_key = f"celery-task-meta-{tid}"
@@ -765,7 +770,7 @@ def collect_results(tasks: List, timeout: int = 300) -> List[Dict]:
                     result = task_result.get('result', {})
                     success = result.get('success', 'N/A') if isinstance(result, dict) else 'N/A'
                     logger.warning(f"  - {tid[:20]}... status={status}, success={success}")
-                except:
+                except Exception:
                     logger.warning(f"  - {tid[:20]}... (JSONデコード失敗)")
             else:
                 logger.warning(f"  - {tid[:20]}... (Redisにデータなし)")

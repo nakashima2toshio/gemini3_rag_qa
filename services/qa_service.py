@@ -50,184 +50,39 @@ def run_advanced_qa_generation(
     progress_callback=None,
 ) -> Dict[str, Any]:
     """
-    a02_make_qa_para.pyをサブプロセスで実行
-
-    改善内容（2024年11月26日）：
-    - Redis直接アクセスによる確実な結果収集
-    - タスク状態誤認識（PENDING）の回避
-    - プログラム終了時のCelery接続クリーンアップ
-    - 全1612タスクの正常完了を保証
-
-    Args:
-        dataset: データセット名
-        input_file: 入力ファイルパス
-        use_celery: Celery並列処理を使用（Redis直接アクセス対応）
-        celery_workers: Celeryワーカー数
-        batch_chunks: バッチチャンク数
-        max_docs: 最大ドキュメント数
-        merge_chunks: チャンク統合
-        min_tokens: 最小トークン数
-        max_tokens: 最大トークン数
-        coverage_threshold: カバレージ閾値
-        model: 使用モデル（gpt-5シリーズ、O-series対応）
-        analyze_coverage: カバレージ分析を実行
-        log_callback: ログコールバック関数
-        progress_callback: 進捗コールバック関数 (current, total) -> None
-
-    Returns:
-        実行結果の辞書
+    Q/A生成を実行（直接インポートモード）
+    
+    プロセス間通信の問題を回避するため、モジュールとしてインポートして直接実行します。
     """
-    # コマンド構築
-    cmd = [sys.executable, "a02_make_qa_para.py"]
-
-    if dataset:
-        cmd.extend(["--dataset", dataset])
-    elif input_file:
-        cmd.extend(["--input-file", input_file])
-
-    if use_celery:
-        cmd.append("--use-celery")
-        cmd.extend(["--celery-workers", str(celery_workers)])
-
-    cmd.extend(
-        [
-            "--batch-chunks",
-            str(batch_chunks),
-            "--max-docs",
-            str(max_docs),
-            "--min-tokens",
-            str(min_tokens),
-            "--max-tokens",
-            str(max_tokens),
-            "--coverage-threshold",
-            str(coverage_threshold),
-            "--model",
-            model,
-        ]
-    )
-
-    if merge_chunks:
-        cmd.append("--merge-chunks")
-
-    if analyze_coverage:
-        cmd.append("--analyze-coverage")
-
-    # 環境変数を現在のプロセスからコピー
-    env = os.environ.copy()
-
-    log_callback(f"🚀 高度なQ/A生成を開始: {' '.join(cmd)}")
-
-    # 出力をキューに格納
-    output_queue = queue.Queue()
-
-    def read_output(pipe, q):
-        """サブプロセスの出力を読み取る"""
-        for line in iter(pipe.readline, ""):
-            if line:
-                q.put(line.strip())
-        pipe.close()
-
     try:
-        # サブプロセス起動
-        process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            universal_newlines=True,
-            bufsize=1,
-            env=env,
+        # ルートディレクトリをパスに追加してインポート
+        sys.path.append(os.getcwd())
+        import qa_generator_runner
+        
+        log_callback("🚀 Q/A生成プロセスを直接実行します...")
+        
+        result = qa_generator_runner.run_qa_generator(
+            dataset=dataset,
+            input_file=input_file,
+            model=model,
+            max_docs=max_docs,
+            analyze_coverage=analyze_coverage,
+            batch_chunks=batch_chunks,
+            merge_chunks=merge_chunks,
+            min_tokens=min_tokens,
+            max_tokens=max_tokens,
+            use_celery=use_celery,
+            celery_workers=celery_workers,
+            coverage_threshold=coverage_threshold,
+            log_callback=log_callback
         )
-
-        # 出力読み取りスレッド開始
-        read_thread = threading.Thread(
-            target=read_output, args=(process.stdout, output_queue)
-        )
-        read_thread.daemon = True
-        read_thread.start()
-
-        # リアルタイムでログを処理
-        saved_files = None
-        qa_count = 0
-        coverage_results = None
-
-        while True:
-            # プロセスが終了したかチェック
-            poll = process.poll()
-
-            # キューから出力を取得
-            try:
-                line = output_queue.get(timeout=0.1)
-                log_callback(line)
-
-                # 進捗情報を抽出してコールバック
-                if progress_callback:
-                    # "進捗: 完了=123/305" のようなパターンにマッチ
-                    progress_match = re.search(
-                        r"進捗.*?完了[=:：\s]*(\d+)\s*/\s*(\d+)", line
-                    )
-                    if progress_match:
-                        current = int(progress_match.group(1))
-                        total = int(progress_match.group(2))
-                        progress_callback(current, total)
-
-                # 結果ファイルのパスを抽出
-                if "CSV保存:" in line:
-                    csv_match = line.split("CSV保存:")[-1].strip()
-                    if saved_files is None:
-                        saved_files = {}
-                    saved_files["csv"] = f"qa_output/{csv_match}"
-
-                elif "JSON保存:" in line:
-                    json_match = line.split("JSON保存:")[-1].strip()
-                    if saved_files:
-                        saved_files["json"] = f"qa_output/{json_match}"
-
-                elif "生成Q/Aペア数:" in line or "生成Q/Aペア:" in line:
-                    # Q/A数を抽出
-                    # "生成Q/Aペア数: 118" または "生成Q/Aペア: 118個" の両方に対応
-                    count_match = re.search(r"(\d+)", line)
-                    if count_match:
-                        qa_count = int(count_match.group(1))
-
-                elif "カバレージ率:" in line:
-                    # カバレージ結果を解析
-                    rate_match = re.search(r"([\d.]+)%", line)
-                    if rate_match:
-                        coverage_results = {
-                            "coverage_rate": float(rate_match.group(1)) / 100
-                        }
-
-            except queue.Empty:
-                pass
-
-            # プロセスが終了したら残りの出力を処理
-            if poll is not None:
-                # 残りの出力を全て取得
-                while not output_queue.empty():
-                    try:
-                        line = output_queue.get_nowait()
-                        log_callback(line)
-                    except queue.Empty:
-                        break
-                break
-
-        # プロセス終了コード確認
-        return_code = process.returncode
-
-        if return_code == 0:
-            log_callback("✅ 高度なQ/A生成が正常に完了しました")
-            return {
-                "success": True,
-                "saved_files": saved_files,
-                "qa_count": qa_count,
-                "coverage_results": coverage_results,
-            }
-        else:
-            log_callback(f"⚠️ 高度なQ/A生成が終了コード {return_code} で終了しました")
-            return {"success": False, "return_code": return_code}
+        
+        return result
 
     except Exception as e:
-        log_callback(f"❌ 高度なQ/A生成でエラーが発生: {str(e)}")
+        log_callback(f"❌ 実行エラー: {str(e)}")
+        import traceback
+        log_callback(traceback.format_exc())
         return {"success": False, "error": str(e)}
 
 

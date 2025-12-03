@@ -3,6 +3,13 @@
   <component name="CsvFileAttributes">
     <option name="attributeMap">
       <map>
+        <entry key="/qa_output/a02_qa_pairs_japanese_text.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/qa_output/a02_qa_pairs_wikipedia_ja.csv">
           <value>
             <Attribute>
